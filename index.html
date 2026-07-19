@@ -50,7 +50,9 @@
         <a class="sitenav__link" href="shelves.html">shelves</a>
         <a class="sitenav__link" href="spotlight.html">spotlight</a>
         <a class="sitenav__link" href="portfolio.html">portfolio</a>
-        <a class="sitenav__link sitenav__link--gold" href="portfolio.html#contact">let&rsquo;s talk &#8599;</a>
+        <!-- Home has its own #contact, so this scrolls rather than
+             navigating away to the portfolio page. -->
+        <a class="sitenav__link sitenav__link--gold" href="#contact">let&rsquo;s talk &#8599;</a>
       </nav>
     </div>
   </header>
@@ -66,7 +68,10 @@
 
     <div class="threshold__center">
       <p class="threshold__welcome">welcome, mortal, to</p>
-      <h1 class="threshold__title">Between the Veil</h1>
+      <!-- Not an <h1>. The threshold is a gate, not content, and it's
+           display:none once you're through — which would leave home
+           with its only h1 hidden. The hero carries it instead. -->
+      <p class="threshold__title">Between the Veil</p>
       <p class="threshold__sub">every impossible bookshop<br />you&rsquo;ve ever wished for</p>
     </div>
 
@@ -116,42 +121,15 @@
           demonstration of what an author or a bookish small business could
           have online, instead of a template.
         </p>
-        <p class="hero__aside">Wander around. Everything works. Nothing is for sale.</p>
-
-        <div class="hero__actions">
-          <a class="btn btn--gold" href="shelves.html">browse the shelves</a>
-          <a class="btn btn--ghost" href="portfolio.html">see how it was built</a>
-        </div>
+        <p class="hero__aside">Wander around. Everything works. Nothing here is really for sale.</p>
 
         <p class="ornament" aria-hidden="true">&#10070;</p>
       </div>
     </section>
 
-    <!-- The directory. The hero can say what this IS; only this can
-         say what's actually in it. Three doors, plainly labelled. -->
-    <section class="section--tight" aria-label="What's in the shop">
-      <div class="container">
-        <div class="directory">
-          <a class="signpost" href="shelves.html">
-            <h3 class="signpost__title">the shelves</h3>
-            <p class="signpost__body">Fifty real romantasy books, sorted by how they make you feel rather than by genre.</p>
-            <span class="signpost__more">browse &rsaquo;</span>
-          </a>
-          <a class="signpost" href="spotlight.html">
-            <h3 class="signpost__title">the spotlight</h3>
-            <p class="signpost__body">What an indie author feature looks like when somebody actually designs it.</p>
-            <span class="signpost__more">read one &rsaquo;</span>
-          </a>
-          <a class="signpost" href="portfolio.html">
-            <h3 class="signpost__title">how it was built</h3>
-            <p class="signpost__body">The door, the palette, the reasoning &mdash; in plain language, for anyone deciding whether to hire me.</p>
-            <span class="signpost__more">the case study &rsaquo;</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Mood shelves: browse by feeling, not genre -->
+    <!-- The spines come second on purpose: they're the most
+         distinctive thing on the page and they demonstrate
+         "browse by feeling" faster than any sentence about it. -->
     <section class="section--tight">
       <div class="container">
         <nav class="shelves" aria-label="Browse by mood">
@@ -164,9 +142,58 @@
       </div>
     </section>
 
-    <!-- Featured reads -->
-    <section class="section" aria-label="Featured reads">
+    <!-- The directory. Now the page's single set of doors — the
+         hero's competing buttons are gone. -->
+    <section class="section--tight" aria-label="What's in the shop">
       <div class="container">
+        <div class="directory">
+          <a class="signpost" href="shelves.html">
+            <h2 class="signpost__title">the shelves</h2>
+            <p class="signpost__body">Fifty real romantasy books, sorted by how they make you feel rather than by genre.</p>
+            <span class="signpost__more">browse &rsaquo;</span>
+          </a>
+          <a class="signpost" href="spotlight.html">
+            <h2 class="signpost__title">the spotlight</h2>
+            <p class="signpost__body">What an indie author feature looks like when somebody actually designs it.</p>
+            <span class="signpost__more">read one &rsaquo;</span>
+          </a>
+          <a class="signpost" href="portfolio.html">
+            <h2 class="signpost__title">how it was built</h2>
+            <p class="signpost__body">The door, the palette, the reasoning &mdash; in plain language, for anyone deciding whether to hire me.</p>
+            <span class="signpost__more">the case study &rsaquo;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE SPOTLIGHT — promoted. This is the reason the site
+         exists, and it was sitting fifth, below the fold. -->
+    <section class="section" aria-label="Indie author spotlight">
+      <div class="container">
+        <div class="feature">
+          <div class="feature__portrait" aria-hidden="true">
+            <span class="feature__glyph">&#9790;</span>
+          </div>
+          <div>
+            <p class="feature__eyebrow">indie author spotlight &#183; a demonstration feature</p>
+            <h2 class="feature__title">Wren Alcott</h2>
+            <p class="feature__body"><em>The Salt-Wife&rsquo;s Daughter</em> &mdash; a lighthouse keeper&rsquo;s daughter marries the sea to settle her father&rsquo;s debt, then spends four hundred pages negotiating the terms.</p>
+            <p class="feature__body">This is what a proper author feature looks like: a portrait, a pull quote, an interview, and real links out to where the book lives.</p>
+            <!-- Wren is invented. Saying so here matters — someone who
+                 never clicks through would otherwise leave believing
+                 both the author and the service are real. -->
+            <p class="feature__moon">Wren is invented, like the shop. The layout is the real thing.</p>
+            <a class="btn btn--moss" href="spotlight/wren-alcott.html">read her feature &rsaquo;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured reads, demoted below the spotlight and given a job
+         the shelves page can't do: a dated, rotating selection. -->
+    <section class="section" aria-label="Reading this month">
+      <div class="container">
+        <h2 class="section-title section-title--mid">what we&rsquo;re reading this moon</h2>
         <div class="reads">
           <article class="book book--rose">
             <p class="book__badge book__badge--rose">&#10022;&#10022;&#10022;&#10022;&#10022;&#10022; 6 stars</p>
@@ -190,54 +217,65 @@
       </div>
     </section>
 
-    <!-- Indie author spotlight — the reason this shop exists -->
-    <section class="section" aria-label="Indie author spotlight">
+    <!-- WHAT'S ON.
+         The calendar is fiction, and the closing line says so —
+         which turns the fiction into the sales argument rather than
+         hiding it. Nobody can be hurt by an imaginary book club the
+         way they could by an imaginary submissions queue: there's
+         no action here that can fail a real person. -->
+    <section class="section" aria-label="What's on">
       <div class="container">
-        <div class="feature">
-          <div class="feature__portrait" aria-hidden="true">
-            <span class="feature__glyph">&#9790;</span>
-          </div>
-          <div>
-            <p class="feature__eyebrow">indie author spotlight &#183; this moon</p>
-            <h3 class="feature__title">Wren Alcott</h3>
-            <p class="feature__body"><em>The Salt-Wife&rsquo;s Daughter</em> &mdash; a lighthouse keeper&rsquo;s daughter marries the sea to settle her father&rsquo;s debt, then spends four hundred pages negotiating the terms.</p>
-            <p class="feature__body">Every new moon, one indie author gets the whole page to themselves. No agent, no gatekeeper, no fee.</p>
-            <p class="feature__moon">read the feature &#183; new moon, march</p>
-            <a class="btn btn--moss" href="spotlight/wren-alcott.html">read her feature &rsaquo;</a>
-          </div>
+        <h2 class="section-title section-title--mid">what&rsquo;s on</h2>
+        <div class="playbills">
+          <article class="playbill">
+            <span class="playbill__glyph" aria-hidden="true">&#10023;</span>
+            <p class="playbill__when">thursdays &#183; after dark</p>
+            <h3 class="playbill__title">book club by candlelight</h3>
+            <p class="playbill__body">One book a month, argued about properly. Tea and treason provided.</p>
+          </article>
+          <article class="playbill">
+            <span class="playbill__glyph" aria-hidden="true">&#9790;</span>
+            <p class="playbill__when">every new moon</p>
+            <h3 class="playbill__title">blind date with a book</h3>
+            <p class="playbill__body">Wrapped in paper, labelled only with a feeling. No refunds, no peeking.</p>
+          </article>
+          <article class="playbill">
+            <span class="playbill__glyph" aria-hidden="true">&#10070;</span>
+            <p class="playbill__when">sundays at dusk</p>
+            <h3 class="playbill__title">silent reading hour</h3>
+            <p class="playbill__body">Everyone in the same room, nobody speaking. The fox attends. The fox sleeps.</p>
+          </article>
         </div>
+        <p class="closing closing--after">The shop is imaginary, so the calendar is too &mdash; but this is the kind of thing a real one would run, and the kind of page it would need to run it.</p>
       </div>
     </section>
 
-    <!-- Two small feature tiles -->
-    <section class="section--tight" aria-label="Shop features">
-      <div class="container">
-        <div class="tiles">
-          <div class="tile">
-            <span class="tile__glyph tile__glyph--gold">&#10023;</span>
-            <h4 class="tile__title">book club by candlelight</h4>
-            <p class="tile__meta">thursdays &#183; tea &amp; treason</p>
-          </div>
-          <div class="tile">
-            <span class="tile__glyph tile__glyph--rose">&#9790;</span>
-            <h4 class="tile__title">your reading spell</h4>
-            <p class="tile__meta">37 read &#183; 4 dnf &#183; 1 reread &times;6</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Merch -->
+    <!-- THE WISHING TABLE.
+         Interactive: your wishes really are saved (localStorage), so
+         this demonstrates a product-request feature end to end. The
+         crowd tallies are invented and labelled as such — inventing
+         social proof would be the same error as the fake queue. -->
     <section class="section" aria-label="The wishing table">
       <div class="container">
-        <div class="wares">
-          <p class="wares__eyebrow">the wishing table</p>
-          <h3 class="wares__title">trinkets for the tender-hearted</h3>
-          <div class="wares__tags">
-            <span class="ware ware--rose">&ldquo;I&rsquo;d die for a fictional man&rdquo; tote</span>
-            <span class="ware ware--moss">annotation tabs</span>
-            <span class="ware ware--gold">smut-o&rsquo;clock candle</span>
-          </div>
+        <div class="wishtable">
+          <span class="wishtable__candle" aria-hidden="true">&#10023;</span>
+          <p class="wishtable__eyebrow">the wishing table</p>
+          <h2 class="wishtable__title">trinkets for the<br />tender-hearted</h2>
+          <p class="wishtable__body">None of it exists yet. Lay a hand on what you&rsquo;d want and the table will remember you &mdash; it really will, on this device.</p>
+
+          <ul class="wishes" id="wishes"></ul>
+
+          <form class="wishform" id="wishForm">
+            <label class="wishform__label" for="wishInput">wish for something else</label>
+            <div class="wishform__row">
+              <input class="wishform__input" id="wishInput" type="text" maxlength="60"
+                     autocomplete="off" placeholder="a candle that smells like a library" />
+              <button class="btn btn--ghost" type="submit">cast it</button>
+            </div>
+          </form>
+
+          <output class="wishtable__count" id="wishCount"></output>
+          <p class="wishtable__fine">Tallies are imagined. Your own wishes are saved on this device only &mdash; nothing is sent anywhere.</p>
         </div>
       </div>
     </section>
@@ -246,9 +284,12 @@
     <section class="band cta" id="contact" aria-label="About this site">
       <div class="container">
         <p class="cta__eyebrow">the part that&rsquo;s actually real &#10022;</p>
-        <h3 class="cta__title">The shop is a wish.<br />Your author website<br />doesn&rsquo;t have to be.</h3>
-        <p class="cta__body">Indie or debut author, and your books still have no home online? Or just questions and no idea where to start? That part, we can make real.</p>
-        <a class="btn btn--moss" href="#" id="ctaBtn">built by Sagewave &mdash; let&rsquo;s talk &#8599;</a>
+        <h2 class="cta__title">The shop is a wish.<br />Yours doesn&rsquo;t<br />have to be.</h2>
+        <!-- Widened: the hero promises authors AND bookish businesses,
+             so the ask can't address only authors. -->
+        <p class="cta__body">A debut author whose book has no home online. A yarn shop, a bindery, a tea company, a bookstagrammer with something to sell. If you&rsquo;ve got something worth finding and nowhere to send people &mdash; that part I can make real.</p>
+        <a class="btn btn--moss" href="#" id="ctaBtn">start a conversation &#8599;</a>
+        <p class="cta__sign">Sagewave Web Design</p>
       </div>
     </section>
 
@@ -284,5 +325,6 @@
 
   <script src="js/nav.js" defer></script>
   <script src="js/veil.js" defer></script>
+  <script src="js/wishes.js" defer></script>
 </body>
 </html>

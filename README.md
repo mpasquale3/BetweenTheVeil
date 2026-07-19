@@ -62,7 +62,48 @@ from the main branch root.
 - `js/nav.js`     — the nav veil + current-page marking; loaded by every page
 - `js/veil.js`    — motes, the door swing, the gate; `index.html` only
 - `js/shelves.js` — the book array and the mood filter; `shelves.html` only
+- `js/wishes.js`  — the wishing table; `index.html` only
 - `img/`          — the door art, pre-split for the animation
+
+## Home, in order
+1. **Hero** — the only `<h1>`. Carries the one plain sentence a cold
+   visitor must be able to read in five seconds.
+2. **The spines** — five moods as books on a rail. Placed second because
+   they demonstrate "browse by feeling" faster than a sentence can.
+3. **The directory** — the page's single set of doors.
+4. **The spotlight** — promoted here because it's the point of the site.
+5. **Reading this moon** — three books, dated so it reads as alive
+   rather than as a duplicate of `shelves.html`.
+6. **What's on** — the events board.
+7. **The wishing table** — interactive.
+8. **The CTA.**
+
+## Browser storage
+Three keys, all client-side, nothing sent anywhere:
+
+| Key | Store | Purpose |
+|---|---|---|
+| `veil-entered` | session | you're through the door; skip it on other pages |
+| `veil-wishes` | local | which trinkets you wished for |
+| `veil-wishes-own` | local | trinkets you typed yourself |
+
+The door uses **session** storage so a new tab tomorrow gets the ritual
+again. The wishing table uses **local** storage because a wish shouldn't
+be forgotten when the tab closes.
+
+All three degrade to "works, forgets you" if storage throws — which it
+does in some private-browsing modes.
+
+## The wishing table
+A working demonstration of a product-request feature with no backend.
+Your picks really persist; the crowd tallies beside each item (`seed` in
+`js/wishes.js`) are **invented**, and the panel says so in `.wishtable__fine`.
+Don't remove that line without removing the tallies — a fabricated
+number that looks like other people is the same mistake as the fake
+submission queue that used to sit on the spotlight page.
+
+Visitor-typed wishes are built with `createElement`/`textContent`, never
+string-interpolated into HTML, so typed markup is inert by construction.
 
 ## Responsive
 Mobile-first, three breakpoints:
