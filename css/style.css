@@ -48,10 +48,27 @@
   --display: 'Cinzel', Georgia, serif;
   --voice:   'Quicksand', 'Trebuchet MS', sans-serif;
 
-  /* Rhythm */
+  /* Rhythm.
+     Corners are square on purpose. Books have square corners;
+     rounded rectangles are the most generic shape on the web and
+     they were fighting the whole premise. Everything below is
+     built out of book anatomy instead — spines, page edges,
+     bookmark tails, foil stamping, library-card ruling. */
   --pad: 14px;
-  --radius: 12px;
-  --radius-pill: 30px;
+  --radius: 0px;
+  --radius-pill: 0px;
+
+  /* Book-shape kit */
+  --spine-w: 10px;                              /* card spine width */
+  --gilt: rgba(217, 196, 143, 0.45);            /* stamped-gold rule */
+  --gilt-faint: rgba(217, 196, 143, 0.18);
+  --shelf-wood: linear-gradient(180deg, #3d2e1d, #221a11 60%, #150f0a);
+  /* the fanned edge of a closed book */
+  --page-edge: repeating-linear-gradient(
+     180deg, rgba(244,238,255,0.20) 0 1px, transparent 1px 3px);
+  /* faint laid-paper texture for parchment panels */
+  --laid: repeating-linear-gradient(
+     90deg, rgba(244,238,255,0.022) 0 1px, transparent 1px 4px);
   --gutter: 16px;
   --measure: 65ch;   /* comfortable reading width for body copy */
   --nav-h: 58px;
@@ -313,12 +330,15 @@ code {
 .sitenav__link--gold {
   color: var(--ink);
   background: var(--gold);
-  border-radius: var(--radius-pill);
   padding: 10px 22px;
   font-family: var(--voice);
-  font-size: 14px;
-  letter-spacing: 0.1em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   border-bottom: none;
+  /* same foil-stamped rule as .btn--gold */
+  box-shadow: inset 0 0 0 1px var(--gold), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
 }
 .sitenav__link--gold:hover { color: var(--ink); filter: brightness(1.07); }
 
@@ -598,22 +618,66 @@ code {
   max-width: 46ch;
 }
 
+/* Frontispiece ornament — a rule broken by a glyph, the way a
+   title page divides itself. Used sparingly: twice on home. */
+.ornament {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 26px auto 0;
+  max-width: 320px;
+  color: var(--gold);
+  font-size: 13px;
+  line-height: 1;
+}
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gilt));
+}
+.ornament::after { background: linear-gradient(90deg, var(--gilt), transparent); }
+
 @media (min-width: 1024px) {
   .hero { padding: 80px 0 56px; }
 }
 
-/* Mood shelves — same wrapped treatment as the shelves-page
-   filters, for the same reason: nothing hidden off the edge. */
+/* THE SHELF.
+   Five moods as five books stood on a rail — vertical spine text,
+   uneven heights, gilt bands near the head and tail. Hovering
+   eases one up out of the row, the way you'd tip a book out with
+   a finger. The rail is the container's ::after, absolutely
+   placed so the spines sit exactly on it.
+
+   Still wrapped, so nothing hides off-screen. */
 .shelves {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   justify-content: center;
-  gap: 8px;
-  padding: 2px 0 10px;
+  gap: 5px;
+  padding: 0 0 7px;   /* the 7px is the rail's thickness */
+}
+
+.shelves::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7px;
+  background: var(--shelf-wood);
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(217, 196, 143, 0.22);
 }
 
 @media (min-width: 1024px) {
-  .shelves { gap: 10px; }
+  .shelves { gap: 7px; }
 }
 
 /* Featured reads */
@@ -622,17 +686,63 @@ code {
   grid-template-columns: 1fr;
   gap: 12px;
 }
+/* A card shaped like a book seen face-on: coloured spine down the
+   left, fanned page edges down the right, square corners. The two
+   pseudo-elements do all of it, so the markup stays a plain
+   <article> with no decorative divs. */
 .book {
-  border-radius: var(--radius);
-  padding: 16px;
-  border: 0.5px solid;
-  transition: transform 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  padding: 18px 26px 18px 30px;   /* clears spine left, pages right */
+  border: 1px solid;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.book:hover { transform: translateY(-2px); }
-.book--rose { background: linear-gradient(160deg, #3a2456, #1e1436); border-color: rgba(201, 143, 176, 0.28); }
-.book--moss { background: linear-gradient(160deg, #1f3a2e, #132018); border-color: rgba(143, 174, 125, 0.28); }
-.book--gold { background: linear-gradient(160deg, #2e2416, #17120b); border-color: rgba(217, 196, 143, 0.28); }
-.book__badge { font-size: 11px; letter-spacing: 0.06em; }
+
+/* the spine */
+.book::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--spine-w);
+  background: var(--spine, var(--mist-faint));
+  box-shadow:
+    inset -2px 0 5px rgba(0, 0, 0, 0.5),
+    inset 2px 0 0 rgba(255, 255, 255, 0.14);
+}
+
+/* the fanned page block */
+.book::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 8px;
+  background: var(--page-edge);
+  opacity: 0.55;
+}
+
+.book:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+.book--rose { --spine: var(--rose); background: linear-gradient(160deg, #3a2456, #1e1436); border-color: rgba(201, 143, 176, 0.28); }
+.book--moss { --spine: var(--moss); background: linear-gradient(160deg, #1f3a2e, #132018); border-color: rgba(143, 174, 125, 0.28); }
+.book--gold { --spine: var(--gold); background: linear-gradient(160deg, #2e2416, #17120b); border-color: rgba(217, 196, 143, 0.28); }
+
+/* Bookplate line — small caps over a hairline, the way a shop
+   writes on the slip tucked inside the cover. */
+.book__badge {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--rule-soft);
+}
 .book__badge--rose { color: #d98fb8; }
 .book__badge--moss { color: var(--moss); }
 .book__badge--gold { color: var(--gold); }
@@ -666,13 +776,15 @@ code {
 
 /* The spotlight feature — the block a featured author screenshots.
    Portrait left, words right, once there's room for both. */
+/* Gilt frame — a rule set in from the edge, like blocking on a
+   cover board. box-shadow does it without an extra wrapper. */
 .feature {
   display: grid;
   gap: 20px;
-  padding: 22px;
-  background: var(--ink-3);
-  border-radius: var(--radius);
-  border: 0.5px solid rgba(217, 196, 143, 0.32);
+  padding: 26px;
+  background: var(--laid), var(--ink-3);
+  border: 1px solid rgba(217, 196, 143, 0.32);
+  box-shadow: inset 0 0 0 5px var(--ink-3), inset 0 0 0 6px var(--gilt-faint);
 }
 .feature__portrait {
   aspect-ratio: 4 / 5;
@@ -721,7 +833,16 @@ code {
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
-.tile { background: var(--violet-2); border-radius: var(--radius); padding: 16px; }
+/* Library card — feint ruling behind the text, hairline border,
+   and a red-ish head rule where the card's heading would sit. */
+.tile {
+  padding: 18px;
+  border: 1px solid var(--rule-soft);
+  border-top: 2px solid var(--gilt);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 25px, rgba(201, 194, 224, 0.06) 25px 26px),
+    var(--violet-2);
+}
 .tile__glyph { font-size: 24px; display: block; line-height: 1; }
 .tile__glyph--gold { color: var(--gold); }
 .tile__glyph--rose { color: var(--rose); }
@@ -742,10 +863,16 @@ code {
 .wares__eyebrow { font-size: 11px; letter-spacing: 0.16em; color: var(--rose); text-transform: uppercase; }
 .wares__title { font-weight: 500; font-size: 20px; margin: 6px 0 12px; }
 .wares__tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.ware { font-size: 12.5px; padding: 6px 13px; border-radius: 20px; }
-.ware--rose { background: var(--rose-deep); color: #eddcf0; }
-.ware--moss { background: var(--moss-deep); color: #dcecd8; }
-.ware--gold { background: var(--gold-deep); color: #ecdcb0; }
+/* Paper tags — the corner is cut, the way a shop tag is punched. */
+.ware {
+  font-size: 12.5px;
+  padding: 8px 14px;
+  border: 1px solid;
+  clip-path: polygon(9px 0, 100% 0, 100% 100%, 0 100%, 0 9px);
+}
+.ware--rose { background: var(--rose-deep); color: #eddcf0; border-color: rgba(201, 143, 176, 0.5); }
+.ware--moss { background: var(--moss-deep); color: #dcecd8; border-color: rgba(143, 174, 125, 0.5); }
+.ware--gold { background: var(--gold-deep); color: #ecdcb0; border-color: rgba(217, 196, 143, 0.5); }
 
 @media (min-width: 1024px) {
   .wares { padding: 32px; }
@@ -776,20 +903,10 @@ code {
 .filters {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;   /* tabs hang from a common head line */
   justify-content: center;
   gap: 8px;
   padding: 4px 0 16px;
-}
-
-/* A mood pill doubles as a filter button — same look, extra state.
-   Deliberately no font-weight change: bolding the active pill
-   changes its width, which reshuffles the wrapped rows every time
-   you pick a different mood. The gold fill is signal enough. */
-.shelf[aria-pressed="true"] {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--ink);
-  box-shadow: 0 0 16px rgba(217, 196, 143, 0.25);
 }
 
 .stacks {
@@ -871,10 +988,10 @@ code {
 /* The submission call — the block that makes a social post convert */
 .submit {
   text-align: center;
-  padding: 32px 20px;
-  border-radius: var(--radius);
+  padding: 36px 24px;
   border: 1px solid rgba(217, 196, 143, 0.4);
-  background: linear-gradient(160deg, var(--gold-deep), #0a0614);
+  background: var(--laid), linear-gradient(160deg, var(--gold-deep), #0a0614);
+  box-shadow: inset 0 0 0 5px transparent, inset 0 0 0 6px var(--gilt-faint);
 }
 .submit__title { font-size: 26px; margin-bottom: 10px; }
 .submit__body {
@@ -1086,40 +1203,130 @@ code {
 }
 
 /* 10. SHARED COMPONENTS ------------------------------------- */
+/* Foil stamping. Squared, letterspaced caps, with a rule set in
+   from the edge — the way a title is blocked onto a hardcover. */
 .btn {
   display: inline-block;
   font-family: var(--voice);
-  font-size: 15px;
-  letter-spacing: 0.14em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   border: none;
-  border-radius: var(--radius-pill);
-  padding: 13px 30px;
+  padding: 15px 34px;
   cursor: pointer;
   text-decoration: none;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
-.btn:hover { filter: brightness(1.06); }
-.btn:active { transform: scale(0.97); }
-.btn--gold { background: var(--gold); color: var(--ink); text-transform: uppercase; }
-.btn--moss { background: var(--moss); color: var(--ink); font-size: 13px; letter-spacing: 0.09em; padding: 12px 24px; margin-top: 18px; }
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); }
 
+.btn--gold {
+  background: var(--gold);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--gold), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
+}
+.btn--moss {
+  background: var(--moss);
+  color: var(--ink);
+  letter-spacing: 0.16em;
+  padding: 13px 28px;
+  margin-top: 18px;
+  box-shadow: inset 0 0 0 1px var(--moss), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
+}
+
+/* A single spine. Latin text set vertical-rl reads top-to-bottom,
+   which is how spines are printed in English-language publishing. */
 .shelf {
+  position: relative;
+  flex: 0 0 auto;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  /* Tall enough that the longest label — "fae courts, bad
+     decisions", 25 characters — sets on one line. Too short and it
+     wraps to a second vertical column, which widens that one spine
+     into a visibly fatter book than its neighbours. A longer mood
+     added later still degrades gracefully: it just becomes a
+     thicker volume. */
+  height: 252px;
+  padding: 18px 11px;
+  font-family: var(--display);
+  font-size: 12.5px;
+  letter-spacing: 0.09em;
+  line-height: 1.3;
+  color: #eddcf0;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid;
+  border-bottom: none;         /* it's standing on the rail */
+  box-shadow:
+    inset -3px 0 6px rgba(0, 0, 0, 0.45),   /* rounded-over spine */
+    inset 2px 0 0 rgba(255, 255, 255, 0.06);
+  transition: transform 0.22s ease, filter 0.22s ease;
+}
+
+/* gilt bands near head and tail, like a stamped hardcover */
+.shelf::before,
+.shelf::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  height: 1px;
+  background: var(--gilt);
+}
+.shelf::before { top: 11px; }
+.shelf::after  { bottom: 11px; }
+
+/* tip it up out of the row, the way you'd pull one with a finger */
+.shelf:hover,
+.shelf:focus-visible {
+  transform: translateY(-9px);
+  filter: brightness(1.12);
+}
+
+/* no two books on a shelf are the same height */
+.shelf:nth-child(2n) { height: 268px; }
+.shelf:nth-child(3n) { height: 258px; }
+.shelf:nth-child(5n) { height: 262px; }
+
+.shelf--rose { background: linear-gradient(90deg, #2d1b4d, var(--twilight)); border-color: rgba(201, 143, 176, 0.45); }
+.shelf--moss { background: linear-gradient(90deg, #16291f, var(--moss-deep)); border-color: rgba(143, 174, 125, 0.45); color: #dcecd8; }
+.shelf--gold { background: linear-gradient(90deg, #241c11, var(--gold-deep)); border-color: rgba(217, 196, 143, 0.45); color: #ecdcb0; }
+
+/* BOOKMARK TABS — the shelves-page mood filter.
+   A filter that marks your place in a set is a bookmark, so it's
+   shaped like one: squared head, notched tail. The shape is a
+   clip-path, which crops the side borders at the notch, so these
+   are filled rather than outlined. */
+.tab {
+  position: relative;
   flex: 0 0 auto;
   font-family: var(--voice);
-  font-size: 13px;
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
   color: #eddcf0;
-  padding: 8px 15px;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
+  padding: 11px 16px 19px;
+  background: var(--twilight);
+  border: none;
+  border-top: 2px solid var(--mist-faint);
   cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.15s ease;
-  border: 0.5px solid;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%);
+  transition: transform 0.16s ease, background 0.2s ease;
 }
-.shelf:hover { transform: translateY(-2px); }
-.shelf--rose { background: var(--twilight); border-color: rgba(201, 143, 176, 0.45); }
-.shelf--moss { background: var(--moss-deep); border-color: rgba(143, 174, 125, 0.45); color: #dcecd8; }
-.shelf--gold { background: var(--gold-deep); border-color: rgba(217, 196, 143, 0.45); color: #ecdcb0; }
+.tab:hover { transform: translateY(-3px); }
+
+.tab--rose { border-top-color: var(--rose); }
+.tab--moss { border-top-color: var(--moss); background: var(--moss-deep); color: #dcecd8; }
+.tab--gold { border-top-color: var(--gold); background: var(--gold-deep); color: #ecdcb0; }
+
+/* Selected. No font-weight change — that would resize the tab and
+   reshuffle the wrapped rows on every click. */
+.tab[aria-pressed="true"] {
+  background: var(--gold);
+  border-top-color: var(--parchment);
+  color: var(--ink);
+}
 
 /* 11. MOTION ------------------------------------------------ */
 .fade-in { opacity: 0; transition: opacity 0.7s ease; }
@@ -1133,6 +1340,7 @@ code {
   .fade-in,
   .btn,
   .shelf,
+  .tab,
   .book,
   .candle,
   .find__link,

@@ -104,11 +104,13 @@
   }
 
   /* 1. RENDER ------------------------------------------------ */
+  /* Filters render as .tab (bookmark shape), not .shelf — .shelf is
+     the book-spine treatment used for the mood row on home. */
   function renderFilters(host) {
-    var html = '<button class="shelf shelf--gold" data-mood="all" aria-pressed="true">everything</button>';
+    var html = '<button class="tab tab--gold" data-mood="all" aria-pressed="true">everything</button>';
 
     for (var i = 0; i < MOODS.length; i++) {
-      html += '<button class="shelf shelf--' + MOODS[i].tone + '" data-mood="' + MOODS[i].id + '" aria-pressed="false">' +
+      html += '<button class="tab tab--' + MOODS[i].tone + '" data-mood="' + MOODS[i].id + '" aria-pressed="false">' +
               MOODS[i].label + '</button>';
     }
     host.innerHTML = html;
