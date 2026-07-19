@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How this was built — Between the Veil</title>
+  <meta name="description" content="A case study: the door animation, the palette, and the reasoning behind Between the Veil. Built by Sagewave Web Design." />
+
+  <meta property="og:title" content="How Between the Veil was built" />
+  <meta property="og:description" content="A concept bookshop, and the reasoning underneath it. No framework, no build step." />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="img/door-full.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="sitenav" id="sitenav">
+    <div class="sitenav__inner container">
+      <a class="sitenav__mark" href="index.html">Between the Veil</a>
+      <button class="sitenav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+      </button>
+      <nav class="sitenav__menu" id="navMenu" aria-label="Main">
+        <a class="sitenav__link" href="index.html">home</a>
+        <a class="sitenav__link" href="shelves.html">shelves</a>
+        <a class="sitenav__link" href="spotlight.html">spotlight</a>
+        <a class="sitenav__link" href="portfolio.html">portfolio</a>
+        <a class="sitenav__link sitenav__link--gold" href="portfolio.html#contact">let&rsquo;s talk &#8599;</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Plain voice from here down. Someone assessing this work
+         shouldn't have to decode "mind the sleeping fox". -->
+    <div class="page-head">
+      <div class="container">
+        <p class="page-head__eyebrow">case study</p>
+        <h1 class="page-head__title">A concept bookshop,<br />and the reasoning under it</h1>
+        <p class="page-head__body">Between the Veil is a self-directed concept by Sagewave Web Design &mdash; an imaginary bookshop, built to show authors and bookish businesses what their own site could be instead of describing it to them in a proposal.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="case__split">
+          <div class="prose">
+            <h2 class="section-title">The brief I set myself</h2>
+            <p>Romantasy readers are one of the most visually literate audiences online &mdash; they have strong, specific taste and they can tell instantly when something was made carelessly. I wanted a piece aimed squarely at that eye, rather than another neutral agency landing page.</p>
+            <p>The second goal was practical. Indie and debut authors regularly have no website at all, and no clear idea what one should cost or contain &mdash; which makes them hard to sell to in the abstract. A finished, specific, slightly absurd example answers the question faster than any pitch deck.</p>
+            <p>So everything here is a working demonstration rather than a mockup: the entrance animates, the shelves filter, the author feature is laid out as though a real person were in it. The shop is invented. The build is not.</p>
+          </div>
+          <div class="case__demo">
+            <p class="case__demo-note">The entrance, in one line:<br />knock &rarr; both halves swing on their own hinge &rarr; candlelight blooms through the seam &rarr; step through.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="container">
+        <h2 class="section-title">The door</h2>
+        <div class="case__split">
+          <div class="prose">
+            <p>A single photograph of a gothic door, sliced down its centre seam into two files. Each half is an absolutely positioned element with its own <code>transform-origin</code> &mdash; left edge for the left half, right edge for the right &mdash; so they rotate outward on real hinges rather than sliding apart.</p>
+            <p>The parent carries <code>perspective: 1400px</code>, which is what makes the swing read as depth instead of a squash. Behind both halves sits a radial gradient that widens and brightens as they open, so light appears to spill out of the gap.</p>
+            <p>On wide screens the door caps at 620px and centres rather than stretching. A door stretched to fill a 1920px monitor stops looking like a door.</p>
+          </div>
+          <div class="case__demo">
+            <p class="case__demo-note">Two halves &#183; two hinges &#183; one glow<br />&mdash;<br />swap in any straight-on door photo, split it down the middle at the same two filenames, and the animation just works.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Craft notes</h2>
+        <div class="notes-grid">
+          <div class="note-card">
+            <h3 class="note-card__title">Palette &amp; type</h3>
+            <p class="note-card__body">A faerie-twilight ground with three accents &mdash; moss, rose and candlelight gold &mdash; each assigned a job rather than sprinkled. Cinzel carries the carved, inscribed feeling; Quicksand keeps the body copy warm enough that the gothic never tips into cold.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">Reduced motion</h3>
+            <p class="note-card__body">The entrance is entirely motion. Under <code>prefers-reduced-motion</code> the door still opens and you still get through, but the swing, the mote drift and the veil menu all resolve instantly instead of animating. The particle system doesn&rsquo;t even instantiate.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">Never trapped outside</h3>
+            <p class="note-card__body">An animated gate is a genuine accessibility risk, so there&rsquo;s a keyboard-reachable skip on the threshold, and entry is remembered per session &mdash; navigating between pages never puts the door back in your way.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">No build step</h3>
+            <p class="note-card__body">Hand-written HTML, one stylesheet, three small scripts, zero dependencies. It deploys by copying a folder. For a site this size a toolchain would have been cost without benefit.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">Mobile-first, genuinely</h3>
+            <p class="note-card__body">Built at phone width first, then widened through three breakpoints. Grids go 1 &rarr; 2 &rarr; 3 columns; the nav switches from a drawn-across veil to a horizontal bar at 1024px.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">Content as data</h3>
+            <p class="note-card__body">The shelves render from a single array rather than a pile of hand-written cards, so renaming a mood or adding a title is a one-line change instead of a find-and-replace across the markup.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">Text-only book cards</h3>
+            <p class="note-card__body">A design decision made for a legal reason. Book titles and author names aren&rsquo;t copyrightable, so real recommendations are safe to list &mdash; but cover art is, and reproducing it without a license isn&rsquo;t. Losing the covers meant the typography had to carry the grid, which turned out better anyway.</p>
+          </div>
+          <div class="note-card">
+            <h3 class="note-card__title">Honest about being a concept</h3>
+            <p class="note-card__body">The shop is invented and says so, in the footer of every page and in the link previews. An earlier draft invited real authors to submit to a spotlight that would never run &mdash; a fine-looking call to action, and a promise the site couldn&rsquo;t keep.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Stack</h2>
+        <ul class="stack-list">
+          <li>HTML</li>
+          <li>CSS custom properties</li>
+          <li>CSS grid &amp; flexbox</li>
+          <li>3D transforms</li>
+          <li>Vanilla JS</li>
+          <li>sessionStorage</li>
+          <li>No framework</li>
+          <li>No build step</li>
+          <li>Static hosting</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band cta" id="contact">
+      <div class="container">
+        <p class="cta__eyebrow">the part that&rsquo;s actually real &#10022;</p>
+        <h2 class="cta__title">Need one of these<br />that sells your book?</h2>
+        <p class="cta__body">Indie or debut author with no website, or a small business in the bookish space that deserves better than a template. Tell me what you&rsquo;re making and I&rsquo;ll tell you what it would take.</p>
+        <a class="btn btn--moss" href="mailto:hello@sagewave.example?subject=Sagewave%20%E2%80%94%20project%20enquiry">email Sagewave &#8599;</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="sitefoot" id="sitefoot">
+    <div class="container">
+      <div class="sitefoot__inner">
+        <div>
+          <p class="sitefoot__mark">Between the Veil</p>
+          <p class="sitefoot__whisper">it appears when you need it</p>
+        </div>
+        <nav aria-label="Footer">
+          <p class="sitefoot__heading">wander</p>
+          <div class="sitefoot__links">
+            <a href="index.html">home</a>
+            <a href="shelves.html">shelves</a>
+            <a href="spotlight.html">spotlight</a>
+            <a href="portfolio.html">portfolio</a>
+          </div>
+        </nav>
+        <div>
+          <p class="sitefoot__heading">the real part</p>
+          <p class="sitefoot__note">Between the Veil is imaginary. Sagewave is not &mdash; it builds sites like this one for authors and bookish small businesses who need somewhere to send people.</p>
+        </div>
+      </div>
+      <p class="sitefoot__legal">Between the Veil &#183; an imaginary bookshop, staged by Sagewave Web Design &#183; the books on the shelves are real, everything else is not</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js" defer></script>
+</body>
+</html>

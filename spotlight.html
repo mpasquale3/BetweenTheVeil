@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indie Author Spotlight — Between the Veil</title>
+  <!-- Link previews carry the concept framing too. Without it, an
+       author could land here believing there's a queue to join. -->
+  <meta name="description" content="An indie author spotlight, designed for an imaginary bookshop. A concept by Sagewave Web Design showing what an author feature can look like." />
+
+  <meta property="og:title" content="Indie Author Spotlight — Between the Veil" />
+  <meta property="og:description" content="What an indie author feature looks like when someone actually designs it. A concept piece by Sagewave Web Design." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="img/door-full.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="sitenav" id="sitenav">
+    <div class="sitenav__inner container">
+      <a class="sitenav__mark" href="index.html">Between the Veil</a>
+      <button class="sitenav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+      </button>
+      <nav class="sitenav__menu" id="navMenu" aria-label="Main">
+        <a class="sitenav__link" href="index.html">home</a>
+        <a class="sitenav__link" href="shelves.html">shelves</a>
+        <a class="sitenav__link" href="spotlight.html">spotlight</a>
+        <a class="sitenav__link" href="portfolio.html">portfolio</a>
+        <a class="sitenav__link sitenav__link--gold" href="portfolio.html#contact">let&rsquo;s talk &#8599;</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="page-head">
+      <div class="container">
+        <p class="page-head__eyebrow">indie author spotlight</p>
+        <h1 class="page-head__title">each new moon,<br />one candle</h1>
+        <p class="page-head__body">In the shop&rsquo;s telling: one indie author a month, written up properly and given the whole page. In reality: a demonstration of what that feature looks like when it&rsquo;s designed rather than bolted on.</p>
+      </div>
+    </div>
+
+    <!-- Current feature -->
+    <section class="section" aria-label="This moon's feature">
+      <div class="container">
+        <div class="feature">
+          <div class="feature__portrait" aria-hidden="true">
+            <span class="feature__glyph">&#9790;</span>
+          </div>
+          <div>
+            <p class="feature__eyebrow">this moon</p>
+            <h2 class="feature__title">Wren Alcott</h2>
+            <p class="feature__body"><em>The Salt-Wife&rsquo;s Daughter</em> &#183; self-published, 2025</p>
+            <p class="feature__body">&ldquo;Eleven agents told me the same thing in different words: they loved it, they didn&rsquo;t know the shelf it went on. I got tired of waiting for someone to invent the shelf.&rdquo;</p>
+            <p class="feature__moon">new moon, march</p>
+            <a class="btn btn--moss" href="spotlight/wren-alcott.html">read her feature &rsaquo;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Archive -->
+    <section class="section" aria-label="Past features">
+      <div class="container">
+        <h2 class="section-title">the archive</h2>
+        <!-- Every author here is invented, as is the shop. Only
+             wren-alcott.html is built out; the rest show how the
+             archive fills in over a year of features. -->
+        <div class="archive">
+          <a class="candle" href="spotlight/wren-alcott.html">
+            <p class="candle__moon">new moon &#183; march</p>
+            <p class="candle__name">Wren Alcott</p>
+            <p class="candle__book"><em>The Salt-Wife&rsquo;s Daughter</em></p>
+          </a>
+          <a class="candle" href="spotlight/wren-alcott.html">
+            <p class="candle__moon">new moon &#183; february</p>
+            <p class="candle__name">Idris Vane</p>
+            <p class="candle__book"><em>The Marrow Court</em></p>
+          </a>
+          <a class="candle" href="spotlight/wren-alcott.html">
+            <p class="candle__moon">new moon &#183; january</p>
+            <p class="candle__name">Tova Marchetti</p>
+            <p class="candle__book"><em>Nine Days of Smoke</em></p>
+          </a>
+        </div>
+        <p class="closing closing--after">Twelve moons a year, twelve authors who didn&rsquo;t wait for permission.</p>
+      </div>
+    </section>
+
+    <!-- This block used to invite real authors to submit to a
+         spotlight that doesn't run. It now says what's actually
+         true and points at the thing that is actually for sale. -->
+    <section class="section" id="submit" aria-label="About this spotlight">
+      <div class="container">
+        <div class="submit">
+          <p class="page-head__eyebrow">before you send anything</p>
+          <h2 class="submit__title">This shop isn&rsquo;t real.<br />The page it&rsquo;s built on is.</h2>
+          <p class="submit__body">Between the Veil is a concept &mdash; a demonstration of what an author feature can look like when someone actually designs it. Wren, Idris and Tova are invented. There&rsquo;s no submission queue, because there&rsquo;s no shop.</p>
+          <p class="submit__body">What&rsquo;s real is that pages like this get built, for authors and for bookish small businesses, by Sagewave. If you&rsquo;ve got a book and nowhere to send people, that&rsquo;s the conversation.</p>
+          <a class="btn btn--gold" href="portfolio.html#contact">talk to Sagewave &#8599;</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="sitefoot" id="sitefoot">
+    <div class="container">
+      <div class="sitefoot__inner">
+        <div>
+          <p class="sitefoot__mark">Between the Veil</p>
+          <p class="sitefoot__whisper">it appears when you need it</p>
+        </div>
+        <nav aria-label="Footer">
+          <p class="sitefoot__heading">wander</p>
+          <div class="sitefoot__links">
+            <a href="index.html">home</a>
+            <a href="shelves.html">shelves</a>
+            <a href="spotlight.html">spotlight</a>
+            <a href="portfolio.html">portfolio</a>
+          </div>
+        </nav>
+        <div>
+          <p class="sitefoot__heading">the real part</p>
+          <p class="sitefoot__note">Between the Veil is imaginary. Sagewave is not &mdash; it builds sites like this one for authors and bookish small businesses who need somewhere to send people.</p>
+        </div>
+      </div>
+      <p class="sitefoot__legal">Between the Veil &#183; an imaginary bookshop, staged by Sagewave Web Design &#183; the books on the shelves are real, everything else is not</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js" defer></script>
+</body>
+</html>

@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Between the Veil — a bookshop that only appears when you wish for it</title>
-  <meta name="description" content="Between the Veil is an imaginary romantasy bookshop. A concept site by Sagewave Web Design." />
+  <meta name="description" content="An imaginary romantasy bookshop that only appears when you wish for it. A concept site by Sagewave Web Design, built for authors and bookish small businesses." />
+
+  <meta property="og:title" content="Between the Veil" />
+  <meta property="og:description" content="Every impossible bookshop you've ever wished for. A concept site by Sagewave Web Design." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="img/door-full.jpg" />
 
   <!-- Fonts: Cinzel (carved display) + Quicksand (soft rounded body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,8 +17,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- THE GATE. Must run before first paint, or a returning
+       visitor sees the door flash before it's hidden. This is the
+       only inline script on the site. -->
+  <script>
+    (function () {
+      var entered = false;
+      /* Private browsing can throw on storage access. The door is
+         decorative, so falling back to "show it" is always safe. */
+      try { entered = sessionStorage.getItem('veil-entered') === '1'; }
+      catch (e) { entered = false; }
+      document.documentElement.className += entered ? ' has-entered' : ' is-gated';
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- ============================================================
+       SITE NAV — hidden by html.is-gated until you're through
+       ============================================================ -->
+  <header class="sitenav" id="sitenav">
+    <div class="sitenav__inner container">
+      <a class="sitenav__mark" href="index.html">Between the Veil</a>
+      <button class="sitenav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+      </button>
+      <nav class="sitenav__menu" id="navMenu" aria-label="Main">
+        <a class="sitenav__link" href="index.html">home</a>
+        <a class="sitenav__link" href="shelves.html">shelves</a>
+        <a class="sitenav__link" href="spotlight.html">spotlight</a>
+        <a class="sitenav__link" href="portfolio.html">portfolio</a>
+        <a class="sitenav__link sitenav__link--gold" href="portfolio.html#contact">let&rsquo;s talk &#8599;</a>
+      </nav>
+    </div>
+  </header>
 
   <!-- ============================================================
        THE THRESHOLD — the gothic door that swings open into light
@@ -47,87 +87,156 @@
     <p class="threshold__parted" id="parted">
       the doors give way&hellip;<br /><span>step through</span>
     </p>
+
+    <!-- Nobody should be trapped outside by an animation -->
+    <button class="threshold__skip" id="skipBtn">skip &rsaquo;</button>
   </section>
 
   <!-- ============================================================
-       THE SHOP — revealed after you step through
+       HOME — revealed after you step through
        ============================================================ -->
-  <main class="shop" id="shop" hidden>
+  <main class="shop" id="shop">
 
-    <header class="shop__intro">
-      <p class="shop__eyebrow">you&rsquo;re through &#10022; mind the sleeping fox</p>
-      <h2 class="shop__heading">what does your heart<br />want tonight?</h2>
-    </header>
-
-    <!-- Mood shelves: browse by feeling, not genre -->
-    <nav class="shelves" aria-label="Browse by mood">
-      <button class="shelf shelf--rose">enemies, then lovers</button>
-      <button class="shelf shelf--moss">morally grey &amp; unwell</button>
-      <button class="shelf shelf--gold">touch her and die</button>
-      <button class="shelf shelf--rose">only one bed</button>
-      <button class="shelf shelf--moss">fae courts, bad decisions</button>
-    </nav>
-
-    <!-- Featured reads -->
-    <section class="reads" aria-label="Featured reads">
-      <article class="book book--rose">
-        <p class="book__badge book__badge--rose">&#10022;&#10022;&#10022;&#10022;&#10022;&#10022; 6 stars</p>
-        <h3 class="book__title">A Court of Thorned Hearts</h3>
-        <p class="book__line">she was the blade. he, the wound.</p>
-      </article>
-      <article class="book book--moss">
-        <p class="book__badge book__badge--moss">staff pick &#183; wept openly</p>
-        <h3 class="book__title">The Moss King&rsquo;s Bride</h3>
-        <p class="book__line">slow burn. and I mean slow.</p>
-      </article>
+    <section class="hero">
+      <div class="container">
+        <p class="hero__eyebrow">you&rsquo;re through &#10022; mind the sleeping fox</p>
+        <h2 class="hero__heading">what does your heart<br />want tonight?</h2>
+        <p class="hero__sub">the shelves rearrange themselves depending on the answer, so take a moment.</p>
+      </div>
     </section>
 
-    <!-- Indie author spotlight -->
-    <section class="spotlight" aria-label="Indie author spotlight">
-      <p class="spotlight__eyebrow">indie author spotlight</p>
-      <h3 class="spotlight__title">this month, a real debut<br />could shelve here</h3>
-      <p class="spotlight__body">Each new moon we light a candle for one indie author. No agent. No gatekeeper. Just a story someone bled for.</p>
+    <!-- Mood shelves: browse by feeling, not genre -->
+    <section class="section--tight">
+      <div class="container">
+        <nav class="shelves" aria-label="Browse by mood">
+          <a class="shelf shelf--rose" href="shelves.html#enemies">enemies, then lovers</a>
+          <a class="shelf shelf--moss" href="shelves.html#grey">morally grey &amp; unwell</a>
+          <a class="shelf shelf--gold" href="shelves.html#touch">touch her and die</a>
+          <a class="shelf shelf--rose" href="shelves.html#onebed">only one bed</a>
+          <a class="shelf shelf--moss" href="shelves.html#fae">fae courts, bad decisions</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Featured reads -->
+    <section class="section" aria-label="Featured reads">
+      <div class="container">
+        <div class="reads">
+          <article class="book book--rose">
+            <p class="book__badge book__badge--rose">&#10022;&#10022;&#10022;&#10022;&#10022;&#10022; 6 stars</p>
+            <h3 class="book__title">Fourth Wing</h3>
+            <p class="book__author">Rebecca Yarros</p>
+            <p class="book__line">dragons, and a war college that wants her dead.</p>
+          </article>
+          <article class="book book--moss">
+            <p class="book__badge book__badge--moss">staff pick &#183; wept openly</p>
+            <h3 class="book__title">From Blood and Ash</h3>
+            <p class="book__author">Jennifer L. Armentrout</p>
+            <p class="book__line">you will not be okay. that is the point.</p>
+          </article>
+          <article class="book book--gold">
+            <p class="book__badge book__badge--gold">the fox&rsquo;s own favourite</p>
+            <h3 class="book__title">Uprooted</h3>
+            <p class="book__author">Naomi Novik</p>
+            <p class="book__line">one tower, one wizard, no escape route.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Indie author spotlight — the reason this shop exists -->
+    <section class="section" aria-label="Indie author spotlight">
+      <div class="container">
+        <div class="feature">
+          <div class="feature__portrait" aria-hidden="true">
+            <span class="feature__glyph">&#9790;</span>
+          </div>
+          <div>
+            <p class="feature__eyebrow">indie author spotlight &#183; this moon</p>
+            <h3 class="feature__title">Wren Alcott</h3>
+            <p class="feature__body"><em>The Salt-Wife&rsquo;s Daughter</em> &mdash; a lighthouse keeper&rsquo;s daughter marries the sea to settle her father&rsquo;s debt, then spends four hundred pages negotiating the terms.</p>
+            <p class="feature__body">Every new moon, one indie author gets the whole page to themselves. No agent, no gatekeeper, no fee.</p>
+            <p class="feature__moon">read the feature &#183; new moon, march</p>
+            <a class="btn btn--moss" href="spotlight/wren-alcott.html">read her feature &rsaquo;</a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Two small feature tiles -->
-    <section class="tiles" aria-label="Shop features">
-      <div class="tile">
-        <span class="tile__glyph tile__glyph--gold">&#10023;</span>
-        <h4 class="tile__title">book club by candlelight</h4>
-        <p class="tile__meta">thursdays &#183; tea &amp; treason</p>
-      </div>
-      <div class="tile">
-        <span class="tile__glyph tile__glyph--rose">&#9790;</span>
-        <h4 class="tile__title">your reading spell</h4>
-        <p class="tile__meta">37 read &#183; 4 dnf &#183; 1 reread &times;6</p>
+    <section class="section--tight" aria-label="Shop features">
+      <div class="container">
+        <div class="tiles">
+          <div class="tile">
+            <span class="tile__glyph tile__glyph--gold">&#10023;</span>
+            <h4 class="tile__title">book club by candlelight</h4>
+            <p class="tile__meta">thursdays &#183; tea &amp; treason</p>
+          </div>
+          <div class="tile">
+            <span class="tile__glyph tile__glyph--rose">&#9790;</span>
+            <h4 class="tile__title">your reading spell</h4>
+            <p class="tile__meta">37 read &#183; 4 dnf &#183; 1 reread &times;6</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Merch -->
-    <section class="wares" aria-label="The wishing table">
-      <p class="wares__eyebrow">the wishing table</p>
-      <h3 class="wares__title">trinkets for the tender-hearted</h3>
-      <div class="wares__tags">
-        <span class="ware ware--rose">&ldquo;I&rsquo;d die for a fictional man&rdquo; tote</span>
-        <span class="ware ware--moss">annotation tabs</span>
-        <span class="ware ware--gold">smut-o&rsquo;clock candle</span>
+    <section class="section" aria-label="The wishing table">
+      <div class="container">
+        <div class="wares">
+          <p class="wares__eyebrow">the wishing table</p>
+          <h3 class="wares__title">trinkets for the tender-hearted</h3>
+          <div class="wares__tags">
+            <span class="ware ware--rose">&ldquo;I&rsquo;d die for a fictional man&rdquo; tote</span>
+            <span class="ware ware--moss">annotation tabs</span>
+            <span class="ware ware--gold">smut-o&rsquo;clock candle</span>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- The real hook: Sagewave -->
-    <section class="cta" aria-label="About this site">
-      <p class="cta__eyebrow">the part that&rsquo;s actually real &#10022;</p>
-      <h3 class="cta__title">The shop is a wish.<br />Your author website<br />doesn&rsquo;t have to be.</h3>
-      <p class="cta__body">Indie or debut author, and your books still have no home online? Or just questions and no idea where to start? That part, we can make real.</p>
-      <a class="btn btn--moss" href="#" id="ctaBtn">built by Sagewave &mdash; let&rsquo;s talk &#8599;</a>
+    <section class="band cta" id="contact" aria-label="About this site">
+      <div class="container">
+        <p class="cta__eyebrow">the part that&rsquo;s actually real &#10022;</p>
+        <h3 class="cta__title">The shop is a wish.<br />Your author website<br />doesn&rsquo;t have to be.</h3>
+        <p class="cta__body">Indie or debut author, and your books still have no home online? Or just questions and no idea where to start? That part, we can make real.</p>
+        <a class="btn btn--moss" href="#" id="ctaBtn">built by Sagewave &mdash; let&rsquo;s talk &#8599;</a>
+      </div>
     </section>
-
-    <footer class="shop__footer">
-      Between the Veil &#183; a daydream, staged by Sagewave Web Design
-    </footer>
 
   </main>
 
+  <!-- ============================================================
+       SITE FOOTER
+       ============================================================ -->
+  <footer class="sitefoot" id="sitefoot">
+    <div class="container">
+      <div class="sitefoot__inner">
+        <div>
+          <p class="sitefoot__mark">Between the Veil</p>
+          <p class="sitefoot__whisper">it appears when you need it</p>
+        </div>
+        <nav aria-label="Footer">
+          <p class="sitefoot__heading">wander</p>
+          <div class="sitefoot__links">
+            <a href="index.html">home</a>
+            <a href="shelves.html">shelves</a>
+            <a href="spotlight.html">spotlight</a>
+            <a href="portfolio.html">portfolio</a>
+          </div>
+        </nav>
+        <div>
+          <p class="sitefoot__heading">the real part</p>
+          <p class="sitefoot__note">Between the Veil is imaginary. Sagewave is not &mdash; it builds sites like this one for authors and bookish small businesses who need somewhere to send people.</p>
+        </div>
+      </div>
+      <p class="sitefoot__legal">Between the Veil &#183; an imaginary bookshop, staged by Sagewave Web Design &#183; the books on the shelves are real, everything else is not</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js" defer></script>
   <script src="js/veil.js" defer></script>
 </body>
 </html>

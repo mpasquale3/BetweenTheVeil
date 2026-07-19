@@ -1,23 +1,47 @@
 /* ============================================================
-   BETWEEN THE VEIL — entrance ritual + shop reveal
+   BETWEEN THE VEIL — entrance ritual + home reveal
    ------------------------------------------------------------
+   index.html holds two states: the threshold, and home. This
+   decides which one you land on.
+
    Flow:
-     1. Scatter floating golden "motes" across the threshold.
-     2. "lift the knocker" -> fade the prompt, bloom the glow,
-        swing both door halves open, invite the reader through.
-     3. Stepping through fades the threshold and reveals the shop.
+     1. If you've already stepped through this session, skip
+        straight to home — no flash of door.
+     2. Otherwise: scatter motes, wait for the knock, swing the
+        door, invite you through.
+     3. Stepping through remembers you and reveals home.
+
+   The key is sessionStorage, not localStorage, on purpose: a new
+   tab tomorrow should get the ritual again. It's the best part.
    Everything degrades gracefully with reduced-motion.
    ============================================================ */
 
 (function () {
   'use strict';
 
+  var KEY = 'veil-entered';
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Private browsing can throw on storage access — the door is
+     decorative, so a failure here should never block entry. */
+  function hasEntered() {
+    try { return sessionStorage.getItem(KEY) === '1'; }
+    catch (e) { return false; }
+  }
+
+  function remember() {
+    try { sessionStorage.setItem(KEY, '1'); }
+    catch (e) { /* no-op: they'll just see the door again */ }
+  }
 
   /* 1. FLOATING MOTES ---------------------------------------- */
   function scatterMotes() {
     var host = document.getElementById('motes');
     if (!host || reduceMotion) return;
+
+    /* one shared stylesheet rather than one per mote */
+    var sheet = document.createElement('style');
+    var rules = '';
 
     for (var i = 0; i < 14; i++) {
       var size = 2 + Math.random() * 3;
@@ -33,18 +57,20 @@
       mote.style.opacity = (0.2 + Math.random() * 0.5).toFixed(2);
       mote.style.animation = 'moteFloat' + i + ' ' + dur.toFixed(2) + 's ease-in-out infinite';
 
-      var keyframes = document.createElement('style');
-      keyframes.textContent =
-        '@keyframes moteFloat' + i + '{0%,100%{transform:translateY(0)}50%{transform:translateY(-' + rise.toFixed(0) + 'px)}}';
-      document.head.appendChild(keyframes);
+      rules += '@keyframes moteFloat' + i +
+        '{0%,100%{transform:translateY(0)}50%{transform:translateY(-' + rise.toFixed(0) + 'px)}}';
 
       host.appendChild(mote);
     }
+
+    sheet.textContent = rules;
+    document.head.appendChild(sheet);
   }
 
   /* 2. THE KNOCK + THE DOOR ---------------------------------- */
   function bindEntrance() {
     var wishBtn = document.getElementById('wishBtn');
+    var skipBtn = document.getElementById('skipBtn');
     var wish = document.getElementById('wish');
     var parted = document.getElementById('parted');
     var door = document.getElementById('door');
@@ -67,7 +93,7 @@
 
       window.setTimeout(function () {
         wish.style.display = 'none';
-        door.classList.add('is-opening');       /* bloom the glow */
+        door.classList.add('is-opening');        /* bloom the glow */
         doorLeft.classList.add('is-open');       /* swing left half  */
         doorRight.classList.add('is-open');      /* swing right half */
       }, reduceMotion ? 0 : 400);
@@ -83,24 +109,43 @@
     function enterShop() {
       if (entered) return;
       entered = true;
-
-      var shop = document.getElementById('shop');
+      remember();
 
       threshold.style.transition = 'opacity 0.6s ease';
       threshold.style.opacity = '0';
 
       window.setTimeout(function () {
-        threshold.style.display = 'none';
-        shop.hidden = false;
-        shop.classList.add('fade-in');
-        requestAnimationFrame(function () { shop.classList.add('is-in'); });
+        threshold.hidden = true;
+        revealHome();
+        /* land at the top of home, not wherever the door left us */
+        window.scrollTo(0, 0);
       }, reduceMotion ? 0 : 560);
     }
 
     if (wishBtn) wishBtn.addEventListener('click', knock);
+    /* the escape hatch: straight through, no ritual */
+    if (skipBtn) skipBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      enterShop();
+    });
   }
 
-  /* 3. SAGEWAVE HOOK ----------------------------------------- */
+  /* 3. HOME -------------------------------------------------- */
+  /* Nav, home and footer are hidden by html.is-gated in CSS, so
+     dropping that one class reveals all three at once. */
+  function revealHome(instant) {
+    var root = document.documentElement;
+    var shop = document.getElementById('shop');
+
+    root.classList.remove('is-gated');
+    root.classList.add('has-entered');
+
+    if (!shop || instant) return;
+    shop.classList.add('fade-in');
+    requestAnimationFrame(function () { shop.classList.add('is-in'); });
+  }
+
+  /* 4. SAGEWAVE HOOK ----------------------------------------- */
   function bindHook() {
     var cta = document.getElementById('ctaBtn');
     if (!cta) return;
@@ -112,8 +157,15 @@
 
   /* INIT ----------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
-    scatterMotes();
-    bindEntrance();
+    if (hasEntered()) {
+      /* returning this session: the inline head script already
+         stamped has-entered, so there's nothing to reveal */
+      revealHome(true);
+    } else {
+      scatterMotes();
+      bindEntrance();
+    }
+
     bindHook();
   });
 })();

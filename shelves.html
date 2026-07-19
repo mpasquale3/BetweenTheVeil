@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Shelves — Between the Veil</title>
+  <meta name="description" content="Browse by feeling, not genre. Enemies then lovers, morally grey and unwell, fae courts and bad decisions." />
+
+  <meta property="og:title" content="The Shelves — Between the Veil" />
+  <meta property="og:description" content="Browse by feeling, not genre." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="img/door-full.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="sitenav" id="sitenav">
+    <div class="sitenav__inner container">
+      <a class="sitenav__mark" href="index.html">Between the Veil</a>
+      <button class="sitenav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+        <span class="sitenav__bar" aria-hidden="true"></span>
+      </button>
+      <nav class="sitenav__menu" id="navMenu" aria-label="Main">
+        <a class="sitenav__link" href="index.html">home</a>
+        <a class="sitenav__link" href="shelves.html">shelves</a>
+        <a class="sitenav__link" href="spotlight.html">spotlight</a>
+        <a class="sitenav__link" href="portfolio.html">portfolio</a>
+        <a class="sitenav__link sitenav__link--gold" href="portfolio.html#contact">let&rsquo;s talk &#8599;</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="page-head">
+      <div class="container">
+        <p class="page-head__eyebrow">the shelves</p>
+        <h1 class="page-head__title">browse by feeling,<br />not genre</h1>
+        <p class="page-head__body">Nobody has ever walked into a bookshop wanting &ldquo;fantasy, 2019, trade paperback.&rdquo; They walk in wanting to feel a specific way. So that&rsquo;s how these are sorted.</p>
+        <p class="page-head__body">The shop is imaginary. These books are not &mdash; every one is real, and the shelf it&rsquo;s on is just the shop&rsquo;s opinion.</p>
+      </div>
+    </div>
+
+    <section class="section--tight">
+      <div class="container">
+        <!-- rendered by js/shelves.js -->
+        <div class="filters" id="filters" role="group" aria-label="Filter by mood"></div>
+        <p class="closing" id="stacksCount" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="stacks" id="stacks"></div>
+        <p class="stacks__empty" id="stacksEmpty" hidden>that shelf is bare tonight. the shop is embarrassed.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="closing">The shelves rearrange themselves overnight. If something you loved has moved, it wanted to be found by someone else first.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="sitefoot" id="sitefoot">
+    <div class="container">
+      <div class="sitefoot__inner">
+        <div>
+          <p class="sitefoot__mark">Between the Veil</p>
+          <p class="sitefoot__whisper">it appears when you need it</p>
+        </div>
+        <nav aria-label="Footer">
+          <p class="sitefoot__heading">wander</p>
+          <div class="sitefoot__links">
+            <a href="index.html">home</a>
+            <a href="shelves.html">shelves</a>
+            <a href="spotlight.html">spotlight</a>
+            <a href="portfolio.html">portfolio</a>
+          </div>
+        </nav>
+        <div>
+          <p class="sitefoot__heading">the real part</p>
+          <p class="sitefoot__note">Between the Veil is imaginary. Sagewave is not &mdash; it builds sites like this one for authors and bookish small businesses who need somewhere to send people.</p>
+        </div>
+      </div>
+      <p class="sitefoot__legal">Between the Veil &#183; an imaginary bookshop, staged by Sagewave Web Design &#183; the books on the shelves are real, everything else is not</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js" defer></script>
+  <script src="js/shelves.js" defer></script>
+</body>
+</html>
