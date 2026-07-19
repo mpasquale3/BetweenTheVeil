@@ -495,6 +495,20 @@ code {
 }
 .threshold__skip:hover { color: var(--mist); }
 
+/* Mirrors the skip button on the opposite corner. */
+.threshold__credit {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 10;
+  font-size: 11.5px;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--mist-faint);
+  max-width: 45vw;
+  text-align: left;
+}
+
 .threshold__center { position: relative; z-index: 5; }
 .threshold__welcome { font-style: italic; font-size: 15px; letter-spacing: 0.08em; color: #b6a9d4; margin-bottom: 10px; }
 .threshold__title {
@@ -609,13 +623,39 @@ code {
   font-size: clamp(28px, 5vw, 54px);
   margin-top: 10px;
 }
+/* The orienting sentence. Bigger, lighter-weight, NOT italic and
+   NOT dimmed — everything else in this hero is atmosphere, and
+   atmosphere is exactly what a five-second visitor can't read. */
 .hero__sub {
   position: relative;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--mist);
+  margin: 18px auto 0;
+  max-width: 56ch;
+}
+.hero__sub strong { color: var(--parchment); font-weight: 600; }
+
+.hero__aside {
+  position: relative;
   font-style: italic;
-  font-size: 15px;
-  color: var(--mist-dim);
-  margin: 14px auto 0;
-  max-width: 46ch;
+  font-size: 14px;
+  color: var(--mist-faint);
+  margin: 10px auto 0;
+}
+
+.hero__actions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+@media (min-width: 1024px) {
+  .hero__sub { font-size: 18px; }
+  .hero__aside { font-size: 15px; }
 }
 
 /* Frontispiece ornament — a rule broken by a glyph, the way a
@@ -643,6 +683,50 @@ code {
 
 @media (min-width: 1024px) {
   .hero { padding: 80px 0 56px; }
+}
+
+/* THE DIRECTORY.
+   A shop board: three doors, plainly labelled. No numbering —
+   these are parallel destinations, not a sequence, and numbering
+   them would imply an order that doesn't exist. */
+.directory {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.signpost {
+  display: block;
+  padding: 22px 20px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--rule-soft);
+  border-top: 2px solid var(--gilt);
+  background: var(--laid), var(--ink-3);
+  transition: transform 0.18s ease, border-color 0.2s ease;
+}
+.signpost:hover {
+  transform: translateY(-3px);
+  border-color: var(--rule);
+  border-top-color: var(--gold);
+}
+.signpost__title { font-size: 21px; margin-bottom: 9px; }
+.signpost__body { font-size: 13.5px; color: var(--mist-dim); line-height: 1.6; }
+.signpost__more {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+@media (min-width: 700px) {
+  .directory { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .directory { gap: 20px; }
+  .signpost { padding: 30px 26px; }
 }
 
 /* THE SHELF.
@@ -1235,6 +1319,16 @@ code {
   box-shadow: inset 0 0 0 1px var(--moss), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
 }
 
+/* Blind-stamped rather than foiled — the secondary of a pair. */
+.btn--ghost {
+  background: transparent;
+  color: var(--gold);
+  box-shadow:
+    inset 0 0 0 1px rgba(217, 196, 143, 0.55),
+    inset 0 0 0 4px rgba(217, 196, 143, 0.16);
+}
+.btn--ghost:hover { background: rgba(217, 196, 143, 0.08); }
+
 /* A single spine. Latin text set vertical-rl reads top-to-bottom,
    which is how spines are printed in English-language publishing. */
 .shelf {
@@ -1342,6 +1436,7 @@ code {
   .shelf,
   .tab,
   .book,
+  .signpost,
   .candle,
   .find__link,
   .sitenav__menu,

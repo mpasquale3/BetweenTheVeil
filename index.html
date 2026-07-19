@@ -88,6 +88,11 @@
       the doors give way&hellip;<br /><span>step through</span>
     </p>
 
+    <!-- Orients a cold visitor without breaking the spell. They see
+         this screen before the hero, so if it says nothing at all,
+         the hero never gets its chance. -->
+    <p class="threshold__credit">a concept bookshop by Sagewave Web&nbsp;Design</p>
+
     <!-- Nobody should be trapped outside by an animation -->
     <button class="threshold__skip" id="skipBtn">skip &rsaquo;</button>
   </section>
@@ -101,8 +106,48 @@
       <div class="container">
         <p class="hero__eyebrow">you&rsquo;re through &#10022; mind the sleeping fox</p>
         <h2 class="hero__heading">what does your heart<br />want tonight?</h2>
-        <p class="hero__sub">the shelves rearrange themselves depending on the answer, so take a moment.</p>
+
+        <!-- The orienting line. Deliberately plain and deliberately
+             larger than the atmosphere around it — this is the one
+             sentence a cold visitor has to be able to read in five
+             seconds, so it does not get to be whimsical. -->
+        <p class="hero__sub">
+          An imaginary bookshop, built by <strong>Sagewave Web Design</strong> &mdash; a working
+          demonstration of what an author or a bookish small business could
+          have online, instead of a template.
+        </p>
+        <p class="hero__aside">Wander around. Everything works. Nothing is for sale.</p>
+
+        <div class="hero__actions">
+          <a class="btn btn--gold" href="shelves.html">browse the shelves</a>
+          <a class="btn btn--ghost" href="portfolio.html">see how it was built</a>
+        </div>
+
         <p class="ornament" aria-hidden="true">&#10070;</p>
+      </div>
+    </section>
+
+    <!-- The directory. The hero can say what this IS; only this can
+         say what's actually in it. Three doors, plainly labelled. -->
+    <section class="section--tight" aria-label="What's in the shop">
+      <div class="container">
+        <div class="directory">
+          <a class="signpost" href="shelves.html">
+            <h3 class="signpost__title">the shelves</h3>
+            <p class="signpost__body">Fifty real romantasy books, sorted by how they make you feel rather than by genre.</p>
+            <span class="signpost__more">browse &rsaquo;</span>
+          </a>
+          <a class="signpost" href="spotlight.html">
+            <h3 class="signpost__title">the spotlight</h3>
+            <p class="signpost__body">What an indie author feature looks like when somebody actually designs it.</p>
+            <span class="signpost__more">read one &rsaquo;</span>
+          </a>
+          <a class="signpost" href="portfolio.html">
+            <h3 class="signpost__title">how it was built</h3>
+            <p class="signpost__body">The door, the palette, the reasoning &mdash; in plain language, for anyone deciding whether to hire me.</p>
+            <span class="signpost__more">the case study &rsaquo;</span>
+          </a>
+        </div>
       </div>
     </section>
 
