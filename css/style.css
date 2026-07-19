@@ -1,0 +1,317 @@
+/* ============================================================
+   BETWEEN THE VEIL — a concept bookshop by Sagewave Web Design
+   ------------------------------------------------------------
+   Structure:
+     1. Design tokens (the "faerie twilight" palette + type)
+     2. Base / reset
+     3. The threshold (wish + veil entrance)
+     4. The shop (revealed after entering)
+     5. Shared components (buttons, shelves, books, tiles)
+     6. Motion & reduced-motion
+   Built mobile-first at a 9:16 phone width. Widen the
+   breakpoints at the bottom to grow this into a full site.
+   ============================================================ */
+
+/* 1. DESIGN TOKENS ------------------------------------------ */
+:root {
+  /* Faerie-twilight palette */
+  --ink:        #0d0918;  /* deepest background */
+  --ink-2:      #120d22;  /* shop background */
+  --ink-3:      #161028;  /* raised panels */
+  --twilight:   #241640;  /* violet mid */
+  --violet-2:   #1a1330;
+  --moss:       #8fae7d;  /* the green accent */
+  --moss-deep:  #1f3a2e;
+  --rose:       #c98fb0;  /* the pink accent */
+  --rose-deep:  #3a2456;
+  --gold:       #d9c48f;  /* candlelight */
+  --gold-deep:  #2e2416;
+  --mist:       #c9c2e0;  /* soft lavender text */
+  --mist-dim:   #a99fc4;
+  --mist-faint: #7d759c;
+  --parchment:  #f4eeff;  /* near-white for headings */
+
+  /* Type */
+  --display: 'Cinzel', Georgia, serif;
+  --voice:   'Quicksand', 'Trebuchet MS', sans-serif;
+
+  /* Rhythm */
+  --pad: 14px;
+  --radius: 12px;
+  --radius-pill: 30px;
+}
+
+/* 2. BASE / RESET ------------------------------------------- */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--ink);
+  color: var(--mist);
+  font-family: var(--voice);
+  overflow: hidden; /* the .shop scroll container handles scrolling */
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The phone-frame wrapper so it reads as an app on any screen.
+   Remove this frame (and the body centering above) when growing
+   into a real full-bleed site. */
+.threshold,
+.shop {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 500; color: var(--parchment); line-height: 1.05; }
+em { font-style: italic; }
+
+/* 3. THE THRESHOLD ------------------------------------------ */
+.threshold {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1.4rem;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 42%, #241640 0%, #140e28 48%, #0a0614 100%);
+}
+
+.motes { position: absolute; inset: 0; pointer-events: none; }
+.mote {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(217, 196, 143, 0.7);
+  box-shadow: 0 0 6px rgba(217, 196, 143, 0.6);
+}
+
+.threshold__whisper {
+  position: absolute;
+  top: 26px; left: 0; right: 0;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--mist-faint);
+  z-index: 2;
+}
+
+.threshold__center { position: relative; z-index: 5; }
+.threshold__welcome { font-style: italic; font-size: 15px; letter-spacing: 0.08em; color: #b6a9d4; margin-bottom: 10px; }
+.threshold__title {
+  font-size: 46px;
+  color: var(--parchment);
+  text-shadow: 0 0 28px rgba(180, 150, 220, 0.45);
+}
+.threshold__title em { font-weight: 400; color: var(--rose); }
+.threshold__sub { font-style: italic; font-size: 15px; color: var(--mist); margin-top: 14px; line-height: 1.5; }
+
+.wish { position: relative; z-index: 5; margin-top: 2rem; }
+.wish__hint { font-style: italic; font-size: 12px; color: var(--mist-faint); margin-top: 12px; }
+
+.threshold__parted {
+  position: relative;
+  z-index: 5;
+  margin-top: 2rem;
+  font-style: italic;
+  font-size: 16px;
+  color: #e8dcf0;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.threshold__parted span { font-size: 13px; color: var(--mist-dim); }
+.threshold__parted.is-visible { opacity: 1; cursor: pointer; }
+
+/* The gothic door — two photographic halves that swing open,
+   with a warm candlelight glow revealed behind them.
+   The door image was split down its centre seam into
+   img/door-left.jpg and img/door-right.jpg. */
+.door {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  perspective: 1400px;      /* gives the swing real depth */
+  pointer-events: none;      /* taps pass through to the button */
+}
+.door__glow {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 40%; height: 96%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse 60% 50% at center, rgba(255,225,160,0.98), rgba(224,150,70,0.75) 45%, rgba(150,70,40,0.5) 70%, transparent 100%);
+  opacity: 0.9;
+  transition: opacity 1.3s ease, width 1.3s ease;
+}
+.door.is-opening .door__glow { opacity: 1; width: 70%; }
+.door__half {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.6s cubic-bezier(0.6, 0, 0.25, 1);
+  backface-visibility: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+.door__half--left  { left: 0;  background-image: url('../img/door-left.jpg');  transform-origin: left center;  }
+.door__half--right { right: 0; background-image: url('../img/door-right.jpg'); transform-origin: right center; }
+/* the swing: each half rotates outward on its hinge */
+.door__half--left.is-open  { transform: rotateY(-105deg); }
+.door__half--right.is-open { transform: rotateY(105deg); }
+
+/* 4. THE SHOP ----------------------------------------------- */
+.shop {
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--pad) 22px;
+  background: linear-gradient(180deg, var(--ink), var(--ink-2));
+}
+.shop::-webkit-scrollbar { display: none; }
+.shop[hidden] { display: none; }
+
+.shop__intro { text-align: center; padding: 22px 0 14px; }
+.shop__eyebrow { font-style: italic; font-size: 13px; letter-spacing: 0.06em; color: var(--moss); }
+.shop__heading { font-size: 25px; margin-top: 6px; }
+
+/* Mood shelves — horizontal scroll of pills */
+.shelves {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 2px 10px;
+  scrollbar-width: none;
+}
+.shelves::-webkit-scrollbar { display: none; }
+
+/* Featured reads */
+.reads { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.book { border-radius: var(--radius); padding: 13px; border: 0.5px solid; }
+.book--rose { background: linear-gradient(160deg, #3a2456, #1e1436); border-color: rgba(201, 143, 176, 0.28); }
+.book--moss { background: linear-gradient(160deg, #1f3a2e, #132018); border-color: rgba(143, 174, 125, 0.28); }
+.book__badge { font-size: 11px; letter-spacing: 0.06em; }
+.book__badge--rose { color: #d98fb8; }
+.book__badge--moss { color: var(--moss); }
+.book__title { font-weight: 600; font-size: 18px; margin: 6px 0 3px; }
+.book__line { font-style: italic; font-size: 12px; color: var(--mist-dim); }
+
+/* Indie spotlight */
+.spotlight {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--ink-3);
+  border-radius: var(--radius);
+  border: 0.5px solid rgba(217, 196, 143, 0.32);
+}
+.spotlight__eyebrow { font-size: 11px; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; }
+.spotlight__title { font-size: 21px; margin: 6px 0 4px; }
+.spotlight__body { font-size: 13px; color: var(--mist); line-height: 1.5; }
+
+/* Feature tiles */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.tile { background: var(--violet-2); border-radius: var(--radius); padding: 13px; }
+.tile__glyph { font-size: 22px; display: block; }
+.tile__glyph--gold { color: var(--gold); }
+.tile__glyph--rose { color: var(--rose); }
+.tile__title { font-weight: 500; font-size: 16px; margin-top: 3px; }
+.tile__meta { font-style: italic; font-size: 11px; color: var(--mist-dim); margin-top: 3px; }
+
+/* Merch */
+.wares {
+  margin-top: 12px;
+  padding: 15px;
+  background: linear-gradient(160deg, var(--twilight), var(--ink-3));
+  border-radius: var(--radius);
+}
+.wares__eyebrow { font-size: 11px; letter-spacing: 0.16em; color: var(--rose); text-transform: uppercase; }
+.wares__title { font-weight: 500; font-size: 18px; margin: 4px 0 9px; }
+.wares__tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.ware { font-size: 12px; padding: 5px 11px; border-radius: 20px; }
+.ware--rose { background: var(--rose-deep); color: #eddcf0; }
+.ware--moss { background: var(--moss-deep); color: #dcecd8; }
+.ware--gold { background: var(--gold-deep); color: #ecdcb0; }
+
+/* The real CTA */
+.cta {
+  margin-top: 20px;
+  padding: 20px 16px;
+  background: #0a0614;
+  border-radius: var(--radius);
+  border: 1px solid rgba(143, 174, 125, 0.4);
+  text-align: center;
+}
+.cta__eyebrow { font-style: italic; font-size: 13px; color: var(--moss); }
+.cta__title { font-size: 22px; margin: 8px 0 6px; line-height: 1.1; }
+.cta__body { font-size: 13px; color: var(--mist); line-height: 1.5; }
+
+.shop__footer { text-align: center; font-style: italic; font-size: 12px; color: #6f6790; padding: 16px 0 4px; }
+
+/* 5. SHARED COMPONENTS -------------------------------------- */
+.btn {
+  display: inline-block;
+  font-family: var(--voice);
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 13px 30px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: scale(0.97); }
+.btn--gold { background: var(--gold); color: var(--ink); text-transform: uppercase; }
+.btn--moss { background: var(--moss); color: var(--ink); font-size: 13px; letter-spacing: 0.09em; padding: 12px 24px; margin-top: 14px; }
+
+.shelf {
+  flex: 0 0 auto;
+  font-family: var(--voice);
+  font-size: 13px;
+  color: #eddcf0;
+  padding: 8px 15px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  border: 0.5px solid;
+}
+.shelf:hover { transform: translateY(-2px); }
+.shelf--rose { background: var(--twilight); border-color: rgba(201, 143, 176, 0.45); }
+.shelf--moss { background: var(--moss-deep); border-color: rgba(143, 174, 125, 0.45); color: #dcecd8; }
+.shelf--gold { background: var(--gold-deep); border-color: rgba(217, 196, 143, 0.45); color: #ecdcb0; }
+
+.book { transition: transform 0.15s ease; }
+.book:hover { transform: translateY(-2px); }
+
+/* 6. MOTION ------------------------------------------------- */
+.fade-in { opacity: 0; transition: opacity 0.7s ease; }
+.fade-in.is-in { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .door__half,
+  .door__glow,
+  .threshold__parted,
+  .fade-in,
+  .btn,
+  .shelf,
+  .book { transition: none !important; }
+}
+
+/* ------------------------------------------------------------
+   GROW-INTO-A-SITE NOTE
+   For a real client, lift the max-width caps on .threshold/.shop,
+   switch .reads / .tiles to auto-fit grids, and let .shop become
+   the page body instead of a scroll container. The tokens and
+   components above are already written to scale up.
+   ------------------------------------------------------------ */

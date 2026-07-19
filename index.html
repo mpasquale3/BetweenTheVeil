@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Between the Veil — a bookshop that only appears when you wish for it</title>
+  <meta name="description" content="Between the Veil is an imaginary romantasy bookshop. A concept site by Sagewave Web Design." />
+
+  <!-- Fonts: Cinzel (carved display) + Quicksand (soft rounded body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       THE THRESHOLD — the gothic door that swings open into light
+       ============================================================ -->
+  <section class="threshold" id="threshold" aria-label="Entrance">
+    <!-- floating golden motes are injected by js/veil.js -->
+    <div class="motes" id="motes" aria-hidden="true"></div>
+
+    <p class="threshold__whisper">it appears when you need it</p>
+
+    <div class="threshold__center">
+      <p class="threshold__welcome">welcome, mortal, to</p>
+      <h1 class="threshold__title">Between the Veil</h1>
+      <p class="threshold__sub">every impossible bookshop<br />you&rsquo;ve ever wished for</p>
+    </div>
+
+    <!-- The door: a warm glow sits behind two halves that swing apart -->
+    <div class="door" id="door">
+      <div class="door__glow" aria-hidden="true"></div>
+      <div class="door__half door__half--left"  id="doorLeft"  aria-hidden="true"></div>
+      <div class="door__half door__half--right" id="doorRight" aria-hidden="true"></div>
+    </div>
+
+    <!-- Step 1: knock -->
+    <div class="wish" id="wish">
+      <button class="btn btn--gold" id="wishBtn">lift the knocker</button>
+      <p class="wish__hint">go on. it&rsquo;s expecting you.</p>
+    </div>
+
+    <!-- Step 2: the doors have opened; invite them through -->
+    <p class="threshold__parted" id="parted">
+      the doors give way&hellip;<br /><span>step through</span>
+    </p>
+  </section>
+
+  <!-- ============================================================
+       THE SHOP — revealed after you step through
+       ============================================================ -->
+  <main class="shop" id="shop" hidden>
+
+    <header class="shop__intro">
+      <p class="shop__eyebrow">you&rsquo;re through &#10022; mind the sleeping fox</p>
+      <h2 class="shop__heading">what does your heart<br />want tonight?</h2>
+    </header>
+
+    <!-- Mood shelves: browse by feeling, not genre -->
+    <nav class="shelves" aria-label="Browse by mood">
+      <button class="shelf shelf--rose">enemies, then lovers</button>
+      <button class="shelf shelf--moss">morally grey &amp; unwell</button>
+      <button class="shelf shelf--gold">touch her and die</button>
+      <button class="shelf shelf--rose">only one bed</button>
+      <button class="shelf shelf--moss">fae courts, bad decisions</button>
+    </nav>
+
+    <!-- Featured reads -->
+    <section class="reads" aria-label="Featured reads">
+      <article class="book book--rose">
+        <p class="book__badge book__badge--rose">&#10022;&#10022;&#10022;&#10022;&#10022;&#10022; 6 stars</p>
+        <h3 class="book__title">A Court of Thorned Hearts</h3>
+        <p class="book__line">she was the blade. he, the wound.</p>
+      </article>
+      <article class="book book--moss">
+        <p class="book__badge book__badge--moss">staff pick &#183; wept openly</p>
+        <h3 class="book__title">The Moss King&rsquo;s Bride</h3>
+        <p class="book__line">slow burn. and I mean slow.</p>
+      </article>
+    </section>
+
+    <!-- Indie author spotlight -->
+    <section class="spotlight" aria-label="Indie author spotlight">
+      <p class="spotlight__eyebrow">indie author spotlight</p>
+      <h3 class="spotlight__title">this month, a real debut<br />could shelve here</h3>
+      <p class="spotlight__body">Each new moon we light a candle for one indie author. No agent. No gatekeeper. Just a story someone bled for.</p>
+    </section>
+
+    <!-- Two small feature tiles -->
+    <section class="tiles" aria-label="Shop features">
+      <div class="tile">
+        <span class="tile__glyph tile__glyph--gold">&#10023;</span>
+        <h4 class="tile__title">book club by candlelight</h4>
+        <p class="tile__meta">thursdays &#183; tea &amp; treason</p>
+      </div>
+      <div class="tile">
+        <span class="tile__glyph tile__glyph--rose">&#9790;</span>
+        <h4 class="tile__title">your reading spell</h4>
+        <p class="tile__meta">37 read &#183; 4 dnf &#183; 1 reread &times;6</p>
+      </div>
+    </section>
+
+    <!-- Merch -->
+    <section class="wares" aria-label="The wishing table">
+      <p class="wares__eyebrow">the wishing table</p>
+      <h3 class="wares__title">trinkets for the tender-hearted</h3>
+      <div class="wares__tags">
+        <span class="ware ware--rose">&ldquo;I&rsquo;d die for a fictional man&rdquo; tote</span>
+        <span class="ware ware--moss">annotation tabs</span>
+        <span class="ware ware--gold">smut-o&rsquo;clock candle</span>
+      </div>
+    </section>
+
+    <!-- The real hook: Sagewave -->
+    <section class="cta" aria-label="About this site">
+      <p class="cta__eyebrow">the part that&rsquo;s actually real &#10022;</p>
+      <h3 class="cta__title">The shop is a wish.<br />Your author website<br />doesn&rsquo;t have to be.</h3>
+      <p class="cta__body">Indie or debut author, and your books still have no home online? Or just questions and no idea where to start? That part, we can make real.</p>
+      <a class="btn btn--moss" href="#" id="ctaBtn">built by Sagewave &mdash; let&rsquo;s talk &#8599;</a>
+    </section>
+
+    <footer class="shop__footer">
+      Between the Veil &#183; a daydream, staged by Sagewave Web Design
+    </footer>
+
+  </main>
+
+  <script src="js/veil.js" defer></script>
+</body>
+</html>
