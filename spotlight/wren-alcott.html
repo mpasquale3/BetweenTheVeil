@@ -34,7 +34,6 @@
         <a class="sitenav__link" href="../shelves.html">shelves</a>
         <a class="sitenav__link" href="../spotlight.html">spotlight</a>
         <a class="sitenav__link" href="../portfolio.html">portfolio</a>
-        <a class="sitenav__link sitenav__link--gold" href="../portfolio.html#contact">let&rsquo;s talk &#8599;</a>
       </nav>
     </div>
   </header>
@@ -48,7 +47,35 @@
            the archive card so the two don't read as one template. -->
       <article class="author">
         <div class="author__portrait" aria-hidden="true">
-          <span class="author__glyph">&#10022;</span>
+          <!-- A moonlit cameo, not a photograph. Wren is invented,
+               so her portrait is a stylised silhouette rather than a
+               fabricated face. Decorative; the frame is aria-hidden. -->
+          <svg class="portrait" viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="moonGlow" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0" stop-color="#f6efda" stop-opacity="0.72"/>
+                <stop offset="0.5" stop-color="#ecd9a8" stop-opacity="0.28"/>
+                <stop offset="1" stop-color="#ecd9a8" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="figureFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#8676a6"/>
+                <stop offset="0.55" stop-color="#4a3a68"/>
+                <stop offset="1" stop-color="#221a3a"/>
+              </linearGradient>
+            </defs>
+            <circle cx="132" cy="112" r="80" fill="url(#moonGlow)"/>
+            <circle cx="132" cy="112" r="46" fill="#f6efda" opacity="0.2"/>
+            <g fill="#d9c48f">
+              <path d="M196 72 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 Z" opacity="0.9"/>
+              <path d="M64 60 l1.1 2.6 2.6 1.1 -2.6 1.1 -1.1 2.6 -1.1 -2.6 -2.6 -1.1 2.6 -1.1 Z" opacity="0.75"/>
+              <path d="M188 150 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" opacity="0.7"/>
+            </g>
+            <ellipse cx="192" cy="150" rx="20" ry="27" transform="rotate(14 192 150)" fill="#241a3a"/>
+            <path d="M132 56 C171 58 193 84 191 117 C189 151 166 166 157 190 C171 218 202 254 218 300 L22 300 C40 250 82 224 101 205 C111 194 113 184 113 176 C113 169 110 165 106 162 C102 159 100 157 101 154 C98 152 97 150 99 147 C101 144 101 142 98 140 C94 138 90 138 86 137 C82 134 80 131 81 128 C82 123 86 120 94 115 C97 109 95 104 96 100 C98 82 111 63 132 56 Z" fill="url(#figureFill)"/>
+            <path d="M100 90 C105 63 123 49 143 50 C175 51 197 84 193 123 C189 110 182 100 171 95 C156 88 138 86 122 88 C113 89 106 89 100 90 Z" fill="#271c46"/>
+            <path d="M100 90 C112 76 130 71 150 74 C166 77 180 86 190 100" fill="none" stroke="#c8b6d8" stroke-width="1.4" opacity="0.4" stroke-linecap="round"/>
+            <path d="M113 176 C113 169 110 165 106 162 C102 159 100 157 101 154 C98 152 97 150 99 147 C101 144 101 142 98 140 C94 138 90 138 86 137 C82 134 80 131 81 128 C82 123 86 120 94 115 C97 109 95 104 96 100 C98 82 111 63 132 56" fill="none" stroke="#efdcab" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+          </svg>
         </div>
         <div>
           <p class="author__moon">new moon &#183; march</p>
@@ -122,14 +149,6 @@
             <span class="updown__name">the whole archive</span>
           </a>
         </nav>
-
-        <!-- Honesty line. The shop is invented and so is Wren; the
-             real books on /shelves are the only real names here. -->
-        <p class="sample-note">
-          Between the Veil is an imaginary bookshop, and Wren Alcott is an
-          imaginary author &mdash; both invented to show what this kind of page
-          can be. <a href="../portfolio.html#contact">The building is real.</a>
-        </p>
       </div>
     </section>
 
@@ -151,12 +170,7 @@
             <a href="../portfolio.html">portfolio</a>
           </div>
         </nav>
-        <div>
-          <p class="sitefoot__heading">the real part</p>
-          <p class="sitefoot__note">Between the Veil is imaginary. Sagewave is not &mdash; it builds sites like this one for authors and bookish small businesses who need somewhere to send people.</p>
-        </div>
       </div>
-      <p class="sitefoot__legal">Between the Veil &#183; an imaginary bookshop, staged by Sagewave Web Design &#183; the books on the shelves are real, everything else is not</p>
     </div>
   </footer>
 

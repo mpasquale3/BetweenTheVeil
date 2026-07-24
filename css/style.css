@@ -679,84 +679,268 @@ code {
   .hero { padding: 80px 0 56px; }
 }
 
-/* THE DIRECTORY.
-   A shop board: three doors, plainly labelled. No numbering —
-   these are parallel destinations, not a sequence, and numbering
-   them would imply an order that doesn't exist. */
-.directory {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+/* THE BOOKCASE — the home hero.
+   A stack of shelves inside a wooden case. Each .bookcase__shelf is
+   a flex row of whatever stands on it, resting on a wooden rail (the
+   ::after, the same rail the old mood row used). The two side stiles
+   and the crown are pseudo-elements and full-bleed children, so the
+   markup stays a plain stack of divs. Built from the site's existing
+   book parts: --shelf-wood for the rails, .shelf for the spines,
+   --gilt for the stamping. */
+.bookcase {
+  position: relative;
+  margin: 0 auto;
+  max-width: 760px;
+  /* the horizontal padding is the frame: it clears the side stiles */
+  padding: 0 clamp(16px, 4vw, 30px) 6px;
+  background:
+    linear-gradient(180deg, rgba(13, 9, 24, 0.35), rgba(13, 9, 24, 0.72)),
+    var(--laid),
+    linear-gradient(180deg, #201811, #14100b);
+  border: 1px solid rgba(217, 196, 143, 0.16);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.55),
+    inset 0 0 70px rgba(0, 0, 0, 0.55);
 }
 
-.signpost {
-  display: block;
-  padding: 22px 20px;
-  text-decoration: none;
-  color: inherit;
-  border: 1px solid var(--rule-soft);
-  border-top: 2px solid var(--gilt);
-  background: var(--laid), var(--ink-3);
-  transition: transform 0.18s ease, border-color 0.2s ease;
+/* the two uprights of the case */
+.bookcase::before,
+.bookcase::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(11px, 3vw, 22px);
+  background: linear-gradient(90deg, #3d2e1d, #221a11 55%, #150f0a);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 0;
 }
-.signpost:hover {
-  transform: translateY(-3px);
-  border-color: var(--rule);
-  border-top-color: var(--gold);
-}
-.signpost__title { font-size: 21px; margin-bottom: 9px; }
-.signpost__body { font-size: 13.5px; color: var(--mist-dim); line-height: 1.6; }
-.signpost__more {
-  display: inline-block;
-  margin-top: 14px;
-  font-size: 10.5px;
-  letter-spacing: 0.18em;
+.bookcase::before { left: 0; }
+.bookcase::after  { right: 0; }
+
+/* the carved cornice, capping the case across both stiles */
+.bookcase__crown {
+  position: relative;
+  z-index: 1;
+  margin-inline: calc(-1 * clamp(16px, 4vw, 30px));
+  padding: 15px 16px 13px;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
   color: var(--gold);
+  text-shadow: 0 0 18px rgba(217, 196, 143, 0.35);
+  background: linear-gradient(180deg, #2b2013, #1a130c);
+  border-bottom: 1px solid var(--gilt-faint);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
-@media (min-width: 700px) {
-  .directory { grid-template-columns: repeat(3, 1fr); }
-}
-@media (min-width: 1024px) {
-  .directory { gap: 20px; }
-  .signpost { padding: 30px 26px; }
-}
-
-/* THE SHELF.
-   Five moods as five books stood on a rail — vertical spine text,
-   uneven heights, gilt bands near the head and tail. Hovering
-   eases one up out of the row, the way you'd tip a book out with
-   a finger. The rail is the container's ::after, absolutely
-   placed so the spines sit exactly on it.
-
-   Still wrapped, so nothing hides off-screen. */
-.shelves {
+/* every shelf sits its contents on a wooden rail */
+.bookcase__shelf {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 5px;
-  padding: 0 0 7px;   /* the 7px is the rail's thickness */
+  z-index: 1;
 }
-
-.shelves::after {
+.bookcase__shelf::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 7px;
+  height: 9px;
   background: var(--shelf-wood);
   box-shadow:
-    0 7px 18px rgba(0, 0, 0, 0.6),
+    0 8px 20px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(217, 196, 143, 0.22);
 }
 
-@media (min-width: 1024px) {
-  .shelves { gap: 7px; }
+/* SHELF ONE — the heading, propped like a shop sign */
+.bookcase__shelf--sign {
+  text-align: center;
+  padding: 22px 4px 20px;
 }
+/* the hero's own type is reused; the spacing changes in here, and
+   this heading runs longer than the old one, so it sets a touch
+   smaller to keep to two lines instead of towering over the case */
+.bookcase__shelf--sign .hero__heading {
+  margin-top: 8px;
+  font-size: clamp(26px, 4.4vw, 44px);
+}
+
+/* SHELF TWO — the spines stand on the rail, uneven like real books.
+   Reuses .shelf wholesale but at hero scale: shorter than the
+   shelves-page spines so the case doesn't tower. The nth-child
+   overrides beat .shelf's own (they carry an extra id of specificity
+   from the descendant selector) so the heights actually take. */
+.bookcase__shelf--books {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  padding: 26px 0 9px;   /* 9px = the rail; books rest right on it */
+}
+.bookcase__shelf--books .shelf {
+  height: 176px;
+  padding: 15px 10px;
+  font-size: 12px;
+}
+.bookcase__shelf--books .shelf:nth-child(2n) { height: 192px; }
+.bookcase__shelf--books .shelf:nth-child(3n) { height: 166px; }
+.bookcase__shelf--books .shelf:nth-child(5n) { height: 184px; }
+
+/* the fox, asleep at the end of the row */
+.fox {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: clamp(88px, 17vw, 122px);
+  margin-left: 4px;
+}
+.fox__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 100%;
+  /* the slow rise and fall of a sleeping thing */
+  animation: foxBreathe 4.8s ease-in-out infinite;
+}
+@keyframes foxBreathe {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.035); }
+}
+
+/* SHELF THREE — three objects, each a link deeper into the shop */
+.bookcase__shelf--props {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(18px, 6vw, 52px);
+  padding: 28px 0 16px;
+}
+.prop {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.prop:hover,
+.prop:focus-visible { transform: translateY(-5px); }
+.prop__icon {
+  display: block;
+  width: clamp(54px, 13vw, 72px);
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
+}
+.prop__icon svg { display: block; width: 100%; height: auto; }
+.prop__label {
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color 0.2s ease;
+}
+.prop:hover .prop__label,
+.prop:focus-visible .prop__label { color: var(--parchment); }
+
+/* SHELF-TALKER — a little paper note stuck to the books shelf, in
+   the shop's handwriting (Caveat). It carries the one thing the
+   picture can't: that the spines are doors you can pull. Placed to
+   the right, clear of the books, and pointer-events:none so a tap
+   lands on the spine behind it. */
+.sticky {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  font-family: 'Caveat', var(--voice);
+  font-weight: 600;
+  line-height: 1.02;
+  text-align: center;
+  color: #3a2e18;
+  padding: 9px 13px 11px;
+  box-shadow: 0 9px 16px rgba(0, 0, 0, 0.5);
+}
+.sticky b { display: block; font-weight: 700; font-size: 1.16em; }
+.sticky i { font-style: italic; }
+
+/* a strip of tape across the top */
+.sticky::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  width: 42px;
+  height: 15px;
+  transform: translateX(-50%) rotate(-2deg);
+  background: rgba(233, 220, 180, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+/* the short note (left) — the call to action */
+.sticky--pull {
+  top: 2px;
+  left: clamp(-4px, 1%, 22px);
+  width: 116px;
+  font-size: 18px;
+  background: linear-gradient(180deg, #f3e7bf, #ead79f);
+  transform: rotate(-5deg);
+}
+/* its scribbled arrow, curving from the lower-right toward the spines */
+.sticky__arrow {
+  position: absolute;
+  right: -8px;
+  bottom: -18px;
+  width: 38px;
+  height: auto;
+  transform: rotate(4deg);
+}
+
+/* the longer note (right) — what's behind the doors. Off past the
+   fox, on a rose-tinted leaf so the two read as two different hands. */
+.sticky--realm {
+  top: 8px;
+  right: clamp(-4px, 1%, 22px);
+  width: 150px;
+  font-size: 16px;
+  background: linear-gradient(180deg, #f1dde7, #e7cbda);
+  transform: rotate(4deg);
+}
+
+/* Phone: no side room, so both notes pin in the space above the
+   spines instead of covering them (the spines are tap targets). */
+@media (max-width: 560px) {
+  .bookcase__shelf--books { padding-top: 60px; }
+  .sticky--pull  { top: 22px; left: 0; font-size: 15px; width: 100px; }
+  .sticky--realm { top: -4px; right: 0; font-size: 12.5px; width: 138px; }
+}
+
+/* the plinth — the one thing to actually read, and the way in */
+.bookcase__base {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 26px clamp(6px, 3vw, 22px) 4px;
+}
+.bookcase__base .hero__sub { margin: 0 auto; }
+.bookcase__base .btn { margin-top: 22px; }
+.bookcase__base .hero__aside { margin-top: 14px; }
+
+@media (min-width: 700px) {
+  .bookcase__shelf--books { gap: 7px; }
+}
+@media (min-width: 1024px) {
+  .bookcase { padding-bottom: 10px; }
+  .bookcase__crown { font-size: 14px; padding: 18px 16px 15px; }
+  .bookcase__shelf--sign { padding: 30px 4px 26px; }
+}
+
+/* The DIRECTORY and the old home mood-row (.shelves container) used
+   to live here. Both are gone: the hero bookcase is the shop's one
+   set of doors now, and .shelf — the book-spine treatment it reuses
+   — is defined with the shared components in §10. */
 
 /* Featured reads */
 .reads {
@@ -874,12 +1058,8 @@ code {
     linear-gradient(160deg, var(--twilight), var(--ink));
   border: 0.5px solid rgba(217, 196, 143, 0.22);
 }
-.feature__glyph {
-  font-size: 54px;
-  color: var(--gold);
-  opacity: 0.55;
-  line-height: 1;
-}
+/* the cameo fills its frame; viewBox is 4:5, same as the portrait */
+.feature__portrait svg { display: block; width: 100%; height: 100%; }
 .feature__eyebrow {
   font-size: 11px;
   letter-spacing: 0.16em;
@@ -1250,7 +1430,7 @@ code {
     linear-gradient(160deg, var(--rose-deep), var(--ink));
   border: 0.5px solid rgba(201, 143, 176, 0.25);
 }
-.author__glyph { font-size: 54px; color: var(--rose); opacity: 0.55; line-height: 1; }
+.author__portrait svg { display: block; width: 100%; height: 100%; }
 .author__moon {
   font-size: 10.5px;
   letter-spacing: 0.16em;
@@ -1564,9 +1744,12 @@ code {
   .book,
   .signpost,
   .candle,
+  .prop,
   .find__link,
   .sitenav__menu,
   .sitenav__bar,
   .sitenav__link { transition: none !important; }
   .sitenav__menu .sitenav__link { opacity: 1; transform: none; }
+  /* the fox lies still */
+  .fox__svg { animation: none !important; }
 }

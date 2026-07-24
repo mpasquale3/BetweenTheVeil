@@ -11,10 +11,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:image" content="img/door-full.jpg" />
 
-  <!-- Fonts: Cinzel (carved display) + Quicksand (soft rounded body) -->
+  <!-- Fonts: Cinzel (carved display) + Quicksand (soft rounded body).
+       Caveat is the shop's handwriting — used only for the sticky
+       notes stuck to the hero shelves, nowhere else. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Quicksand:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
 
@@ -50,9 +52,6 @@
         <a class="sitenav__link" href="shelves.html">shelves</a>
         <a class="sitenav__link" href="spotlight.html">spotlight</a>
         <a class="sitenav__link" href="portfolio.html">portfolio</a>
-        <!-- Home has its own #contact, so this scrolls rather than
-             navigating away to the portfolio page. -->
-        <a class="sitenav__link sitenav__link--gold" href="#contact">let&rsquo;s talk &#8599;</a>
       </nav>
     </div>
   </header>
@@ -93,11 +92,6 @@
       the doors give way&hellip;<br /><span>step through</span>
     </p>
 
-    <!-- Orients a cold visitor without breaking the spell. They see
-         this screen before the hero, so if it says nothing at all,
-         the hero never gets its chance. -->
-    <p class="threshold__credit">a concept bookshop by Sagewave Web&nbsp;Design</p>
-
     <!-- Nobody should be trapped outside by an animation -->
     <button class="threshold__skip" id="skipBtn">skip &rsaquo;</button>
   </section>
@@ -107,64 +101,205 @@
        ============================================================ -->
   <main class="shop" id="shop">
 
-    <section class="hero">
+    <!-- THE BOOKCASE — the hero.
+         A shop's bookcase you can actually use. The heading is
+         propped on the top shelf; the moods stand as book spines you
+         can pull; three objects lead deeper into the shop; and the
+         fox sleeps through the whole thing. It replaces both the old
+         text hero and the separate "browse by mood" spine row — the
+         spines live here now, so nothing is said twice. -->
+    <section class="hero" aria-label="Welcome to the shop">
       <div class="container">
-        <p class="hero__eyebrow">you&rsquo;re through &#10022; mind the sleeping fox</p>
-        <h2 class="hero__heading">what does your heart<br />want tonight?</h2>
+        <div class="bookcase">
 
-        <!-- The orienting line. Deliberately plain and deliberately
-             larger than the atmosphere around it — this is the one
-             sentence a cold visitor has to be able to read in five
-             seconds, so it does not get to be whimsical. -->
-        <p class="hero__sub">
-          An imaginary bookshop, built by <strong>Sagewave Web Design</strong> &mdash; a working
-          demonstration of what an author or a bookish small business could
-          have online, instead of a template.
-        </p>
-        <p class="hero__aside">Wander around. Everything works. Nothing here is really for sale.</p>
+          <!-- the carved crown of the case -->
+          <p class="bookcase__crown">Between the Veil</p>
 
-        <p class="ornament" aria-hidden="true">&#10070;</p>
-      </div>
-    </section>
+          <!-- SHELF ONE — the heading, propped like a shop sign -->
+          <div class="bookcase__shelf bookcase__shelf--sign">
+            <p class="hero__eyebrow">you&rsquo;re through &#10022; mind the sleeping fox</p>
+            <!-- Home's only h1. The threshold's title is display:none
+                 once you're through, so the hero has to carry it. It
+                 also finishes the thought the gate started: the door
+                 promised "every impossible bookshop you've ever wished
+                 for" — this says what became of it. -->
+            <h1 class="hero__heading">every impossible bookshop, conjured into a website</h1>
+          </div>
 
-    <!-- The spines come second on purpose: they're the most
-         distinctive thing on the page and they demonstrate
-         "browse by feeling" faster than any sentence about it. -->
-    <section class="section--tight">
-      <div class="container">
-        <nav class="shelves" aria-label="Browse by mood">
-          <a class="shelf shelf--rose" href="shelves.html#enemies">enemies, then lovers</a>
-          <a class="shelf shelf--moss" href="shelves.html#grey">morally grey &amp; unwell</a>
-          <a class="shelf shelf--gold" href="shelves.html#touch">touch her and die</a>
-          <a class="shelf shelf--rose" href="shelves.html#onebed">only one bed</a>
-          <a class="shelf shelf--moss" href="shelves.html#fae">fae courts, bad decisions</a>
-        </nav>
-      </div>
-    </section>
+          <!-- SHELF TWO — the moods, stood as spines, and the fox
+               asleep at the end. Each spine deep-links to its shelf;
+               shelves.js reads the #hash and lands on that mood. -->
+          <div class="bookcase__shelf bookcase__shelf--books">
 
-    <!-- The directory. Now the page's single set of doors — the
-         hero's competing buttons are gone. -->
-    <section class="section--tight" aria-label="What's in the shop">
-      <div class="container">
-        <div class="directory">
-          <a class="signpost" href="shelves.html">
-            <h2 class="signpost__title">the shelves</h2>
-            <p class="signpost__body">Fifty real romantasy books, sorted by how they make you feel rather than by genre.</p>
-            <span class="signpost__more">browse &rsaquo;</span>
-          </a>
-          <a class="signpost" href="spotlight.html">
-            <h2 class="signpost__title">the spotlight</h2>
-            <p class="signpost__body">What an indie author feature looks like when somebody actually designs it.</p>
-            <span class="signpost__more">read one &rsaquo;</span>
-          </a>
-          <a class="signpost" href="portfolio.html">
-            <h2 class="signpost__title">how it was built</h2>
-            <p class="signpost__body">The door, the palette, the reasoning &mdash; in plain language, for anyone deciding whether to hire me.</p>
-            <span class="signpost__more">the case study &rsaquo;</span>
-          </a>
+            <!-- Two shelf-talkers, in the shop's own handwriting: the
+                 one thing a visitor can't tell by looking is that the
+                 spines are doors. The short note (left) calls the
+                 action and points at the books; the longer one (right)
+                 says what's behind them. Both decorative and
+                 pointer-events:none, so a tap falls straight through
+                 to the book behind. -->
+            <span class="sticky sticky--pull" aria-hidden="true">
+              pull your<b>desires</b>
+              <svg class="sticky__arrow" viewBox="0 0 46 42" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 8 C24 6 40 16 39 34" fill="none" stroke="#4a3a1e" stroke-width="2.6" stroke-linecap="round"/>
+                <path d="M39 34 L31 30 M39 34 L41 25" fill="none" stroke="#4a3a1e" stroke-width="2.6" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="sticky sticky--realm" aria-hidden="true">
+              every spine opens a realm of trope picks
+            </span>
+
+            <a class="shelf shelf--rose" href="shelves.html#enemies">enemies to lovers</a>
+            <a class="shelf shelf--moss" href="shelves.html#grey">morally grey</a>
+            <a class="shelf shelf--gold" href="shelves.html#touch">touch her &amp; die</a>
+            <a class="shelf shelf--rose" href="shelves.html#onebed">only one bed</a>
+            <a class="shelf shelf--moss" href="shelves.html#fae">fae, bad ideas</a>
+
+            <!-- the fox. Decorative, and content to stay that way. -->
+            <span class="fox" aria-hidden="true">
+              <svg class="fox__svg" viewBox="0 0 150 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- brush tail, curling up over the hindquarters -->
+                <path d="M96 80 C132 84 152 58 138 34 C133 25 124 22 116 24 C128 34 126 52 112 62 C104 68 96 70 90 72 Z" fill="#b06f3c"/>
+                <path d="M116 24 C124 22 133 25 138 34 C141 40 141 47 139 53 C132 41 124 31 116 24 Z" fill="#efe3ca"/>
+                <!-- body loaf -->
+                <path d="M22 78 C16 58 30 48 54 47 C92 45 116 56 120 72 C122 81 112 85 98 85 L40 85 C28 85 24 83 22 78 Z" fill="#c17d47"/>
+                <!-- front paw, tucked -->
+                <path d="M40 85 C40 78 48 74 58 76 C66 78 66 85 66 85 Z" fill="#a3652f"/>
+                <!-- head, resting low at the front -->
+                <path d="M46 66 C36 60 24 62 16 72 C12 77 14 83 22 85 C34 88 48 84 52 76 C54 71 51 68 46 66 Z" fill="#c17d47"/>
+                <!-- ear -->
+                <path d="M44 60 L42 44 L58 56 Z" fill="#b06f3c"/>
+                <path d="M46 57 L45 48 L54 55 Z" fill="#7c4a24"/>
+                <!-- cream cheek + muzzle -->
+                <path d="M16 72 C22 70 30 71 34 76 C30 83 22 86 16 84 C12 81 12 75 16 72 Z" fill="#efe3ca"/>
+                <!-- closed, sleeping eye -->
+                <path d="M30 71 q5 4 10 0" fill="none" stroke="#2a1a10" stroke-width="2" stroke-linecap="round"/>
+                <!-- nose -->
+                <circle cx="15" cy="78" r="3.2" fill="#2a1a10"/>
+                <!-- dreaming -->
+                <g fill="#d9c48f" font-family="Cinzel, serif">
+                  <text x="70" y="30" font-size="12">z</text>
+                  <text x="82" y="20" font-size="9">z</text>
+                  <text x="91" y="12" font-size="6">z</text>
+                </g>
+              </svg>
+            </span>
+          </div>
+
+          <!-- SHELF THREE — three things worth wandering to, stood on
+               the shelf as objects. Each is a real link deeper in. -->
+          <div class="bookcase__shelf bookcase__shelf--props">
+            <a class="prop" href="#this-moon">
+              <span class="prop__icon">
+                <svg viewBox="0 0 84 92" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <!-- the almanac hangs from a little ring -->
+                  <circle cx="42" cy="8" r="3.4" fill="none" stroke="#8a6a3a" stroke-width="2"/>
+                  <line x1="42" y1="11" x2="42" y2="15" stroke="#8a6a3a" stroke-width="2"/>
+                  <rect x="14" y="15" width="56" height="64" fill="#efe3c6" stroke="#c9b892" stroke-width="1.5"/>
+                  <rect x="14" y="15" width="56" height="14" fill="#2b2447"/>
+                  <!-- a star in the header band -->
+                  <path d="M22 25 l1 2.2 2.2 1 -2.2 1 -1 2.2 -1 -2.2 -2.2 -1 2.2 -1 Z" fill="#d9c48f"/>
+                  <path d="M60 24 l0.8 1.8 1.8 0.8 -1.8 0.8 -0.8 1.8 -0.8 -1.8 -1.8 -0.8 1.8 -0.8 Z" fill="#d9c48f"/>
+                  <!-- the moon of the month, a carved crescent -->
+                  <circle cx="42" cy="48" r="13" fill="#2b2447"/>
+                  <circle cx="47" cy="45" r="12" fill="#efe3c6"/>
+                  <!-- the phases along the foot -->
+                  <g>
+                    <circle cx="24" cy="71" r="3" fill="none" stroke="#2b2447" stroke-width="1.4"/>
+                    <path d="M34 68 a3 3 0 0 1 0 6 Z" fill="#2b2447"/>
+                    <circle cx="44" cy="71" r="3" fill="#2b2447"/>
+                    <path d="M54 68 a3 3 0 0 0 0 6 Z" fill="#2b2447"/>
+                    <circle cx="64" cy="71" r="3" fill="none" stroke="#2b2447" stroke-width="1.4"/>
+                  </g>
+                </svg>
+              </span>
+              <span class="prop__label">this moon&rsquo;s read</span>
+            </a>
+
+            <a class="prop" href="spotlight.html">
+              <span class="prop__icon">
+                <svg viewBox="0 0 70 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <radialGradient id="candleGlow" cx="0.5" cy="0.5" r="0.5">
+                      <stop offset="0" stop-color="#ffe1a0" stop-opacity="0.9"/>
+                      <stop offset="1" stop-color="#ffe1a0" stop-opacity="0"/>
+                    </radialGradient>
+                  </defs>
+                  <ellipse cx="35" cy="26" rx="24" ry="30" fill="url(#candleGlow)"/>
+                  <!-- the candle -->
+                  <rect x="26" y="42" width="18" height="44" fill="#efe3c6"/>
+                  <rect x="26" y="42" width="5" height="44" fill="#f6eed6"/>
+                  <rect x="39" y="42" width="5" height="44" fill="#d6c6a0"/>
+                  <rect x="34" y="34" width="2" height="9" fill="#3a2a18"/>
+                  <!-- the flame -->
+                  <path d="M35 10 C43 21 42 33 35 37 C28 33 27 21 35 10 Z" fill="#ffcf6b"/>
+                  <path d="M35 19 C39 25 38 33 35 36 C32 33 31 26 35 19 Z" fill="#fff3cf"/>
+                  <!-- the holder -->
+                  <ellipse cx="35" cy="86" rx="15" ry="3.4" fill="#a5814d"/>
+                  <path d="M22 86 L48 86 L44 95 L26 95 Z" fill="#7c5f34"/>
+                </svg>
+              </span>
+              <span class="prop__label">author spotlight</span>
+            </a>
+
+            <a class="prop" href="#wishing">
+              <span class="prop__icon">
+                <svg viewBox="0 0 80 80" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <radialGradient id="snowFill" cx="0.38" cy="0.32" r="0.85">
+                      <stop offset="0" stop-color="#ffffff"/>
+                      <stop offset="0.6" stop-color="#e9e6f5"/>
+                      <stop offset="1" stop-color="#c7c1e0"/>
+                    </radialGradient>
+                  </defs>
+                  <!-- the little dent of snow it rests in -->
+                  <ellipse cx="40" cy="66" rx="26" ry="6.5" fill="#b9b2d6" opacity="0.35"/>
+                  <circle cx="40" cy="42" r="24" fill="url(#snowFill)"/>
+                  <ellipse cx="32" cy="34" rx="7" ry="5" fill="#ffffff" opacity="0.75"/>
+                  <!-- a wish, catching the light -->
+                  <path d="M60 22 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="#d9c48f"/>
+                  <path d="M20 18 l1.4 3.4 3.4 1.4 -3.4 1.4 -1.4 3.4 -1.4 -3.4 -3.4 -1.4 3.4 -1.4 Z" fill="#e7d9ad"/>
+                </svg>
+              </span>
+              <span class="prop__label">make a wish</span>
+            </a>
+
+            <!-- The old directory's third door lived here as "how it
+                 was built". Now it's the key on the shelf: the way
+                 behind the veil, to the case study for anyone deciding
+                 whether to hire Sagewave. -->
+            <a class="prop" href="portfolio.html">
+              <span class="prop__icon">
+                <svg viewBox="0 0 92 64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <!-- the bow, an ornate loop -->
+                  <circle cx="22" cy="32" r="15" fill="none" stroke="#cbab5b" stroke-width="6"/>
+                  <circle cx="22" cy="32" r="5" fill="#1a130c"/>
+                  <!-- the shaft -->
+                  <rect x="35" y="29" width="49" height="6" rx="1" fill="#cbab5b"/>
+                  <rect x="35" y="29" width="49" height="2" fill="#e6d29a"/>
+                  <!-- the bit, its teeth -->
+                  <rect x="68" y="35" width="5" height="10" rx="1" fill="#cbab5b"/>
+                  <rect x="78" y="35" width="5" height="14" rx="1" fill="#cbab5b"/>
+                </svg>
+              </span>
+              <span class="prop__label">how it was built</span>
+            </a>
+          </div>
+
+          <!-- the plinth: an in-world invitation and the door in -->
+          <div class="bookcase__base">
+            <p class="hero__sub">Pull a spine, light a candle, make a wish &mdash; the shop is yours tonight.</p>
+            <a class="btn btn--gold" href="shelves.html">browse the shelves &rsaquo;</a>
+          </div>
+
         </div>
       </div>
     </section>
+
+    <!-- The directory that used to sit here is gone: its three doors
+         are all in the hero bookcase now — the spines, the candle,
+         and the key — so repeating them as cards said everything
+         twice. -->
 
     <!-- THE SPOTLIGHT — promoted. This is the reason the site
          exists, and it was sitting fifth, below the fold. -->
@@ -172,17 +307,40 @@
       <div class="container">
         <div class="feature">
           <div class="feature__portrait" aria-hidden="true">
-            <span class="feature__glyph">&#9790;</span>
+            <!-- A moonlit cameo, not a photograph. Wren is invented,
+                 so her portrait is a stylised silhouette rather than a
+                 fabricated face. Decorative; the frame is aria-hidden. -->
+            <svg class="portrait" viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="moonGlow" cx="0.5" cy="0.5" r="0.5">
+                  <stop offset="0" stop-color="#f6efda" stop-opacity="0.72"/>
+                  <stop offset="0.5" stop-color="#ecd9a8" stop-opacity="0.28"/>
+                  <stop offset="1" stop-color="#ecd9a8" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="figureFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#8676a6"/>
+                  <stop offset="0.55" stop-color="#4a3a68"/>
+                  <stop offset="1" stop-color="#221a3a"/>
+                </linearGradient>
+              </defs>
+              <circle cx="132" cy="112" r="80" fill="url(#moonGlow)"/>
+              <circle cx="132" cy="112" r="46" fill="#f6efda" opacity="0.2"/>
+              <g fill="#d9c48f">
+                <path d="M196 72 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 Z" opacity="0.9"/>
+                <path d="M64 60 l1.1 2.6 2.6 1.1 -2.6 1.1 -1.1 2.6 -1.1 -2.6 -2.6 -1.1 2.6 -1.1 Z" opacity="0.75"/>
+                <path d="M188 150 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" opacity="0.7"/>
+              </g>
+              <ellipse cx="192" cy="150" rx="20" ry="27" transform="rotate(14 192 150)" fill="#241a3a"/>
+              <path d="M132 56 C171 58 193 84 191 117 C189 151 166 166 157 190 C171 218 202 254 218 300 L22 300 C40 250 82 224 101 205 C111 194 113 184 113 176 C113 169 110 165 106 162 C102 159 100 157 101 154 C98 152 97 150 99 147 C101 144 101 142 98 140 C94 138 90 138 86 137 C82 134 80 131 81 128 C82 123 86 120 94 115 C97 109 95 104 96 100 C98 82 111 63 132 56 Z" fill="url(#figureFill)"/>
+              <path d="M100 90 C105 63 123 49 143 50 C175 51 197 84 193 123 C189 110 182 100 171 95 C156 88 138 86 122 88 C113 89 106 89 100 90 Z" fill="#271c46"/>
+              <path d="M100 90 C112 76 130 71 150 74 C166 77 180 86 190 100" fill="none" stroke="#c8b6d8" stroke-width="1.4" opacity="0.4" stroke-linecap="round"/>
+              <path d="M113 176 C113 169 110 165 106 162 C102 159 100 157 101 154 C98 152 97 150 99 147 C101 144 101 142 98 140 C94 138 90 138 86 137 C82 134 80 131 81 128 C82 123 86 120 94 115 C97 109 95 104 96 100 C98 82 111 63 132 56" fill="none" stroke="#efdcab" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+            </svg>
           </div>
           <div>
-            <p class="feature__eyebrow">indie author spotlight &#183; a demonstration feature</p>
+            <p class="feature__eyebrow">indie author spotlight</p>
             <h2 class="feature__title">Wren Alcott</h2>
             <p class="feature__body"><em>The Salt-Wife&rsquo;s Daughter</em> &mdash; a lighthouse keeper&rsquo;s daughter marries the sea to settle her father&rsquo;s debt, then spends four hundred pages negotiating the terms.</p>
-            <p class="feature__body">This is what a proper author feature looks like: a portrait, a pull quote, an interview, and real links out to where the book lives.</p>
-            <!-- Wren is invented. Saying so here matters — someone who
-                 never clicks through would otherwise leave believing
-                 both the author and the service are real. -->
-            <p class="feature__moon">Wren is invented, like the shop. The layout is the real thing.</p>
             <a class="btn btn--moss" href="spotlight/wren-alcott.html">read her feature &rsaquo;</a>
           </div>
         </div>
@@ -191,27 +349,27 @@
 
     <!-- Featured reads, demoted below the spotlight and given a job
          the shelves page can't do: a dated, rotating selection. -->
-    <section class="section" aria-label="Reading this month">
+    <section class="section" id="this-moon" aria-label="Reading this month">
       <div class="container">
         <h2 class="section-title section-title--mid">what we&rsquo;re reading this moon</h2>
         <div class="reads">
           <article class="book book--rose">
             <p class="book__badge book__badge--rose">&#10022;&#10022;&#10022;&#10022;&#10022;&#10022; 6 stars</p>
-            <h3 class="book__title">Fourth Wing</h3>
-            <p class="book__author">Rebecca Yarros</p>
-            <p class="book__line">dragons, and a war college that wants her dead.</p>
+            <h3 class="book__title">The Serpent and the Wings of Night</h3>
+            <p class="book__author">Carissa Broadbent</p>
+            <p class="book__line">vampire trials. devotion as a weapon.</p>
           </article>
           <article class="book book--moss">
             <p class="book__badge book__badge--moss">staff pick &#183; wept openly</p>
-            <h3 class="book__title">From Blood and Ash</h3>
-            <p class="book__author">Jennifer L. Armentrout</p>
-            <p class="book__line">you will not be okay. that is the point.</p>
+            <h3 class="book__title">House of Earth and Blood</h3>
+            <p class="book__author">Sarah J. Maas</p>
+            <p class="book__line">grief, glitter, and a very protective male.</p>
           </article>
           <article class="book book--gold">
             <p class="book__badge book__badge--gold">the fox&rsquo;s own favourite</p>
-            <h3 class="book__title">Uprooted</h3>
-            <p class="book__author">Naomi Novik</p>
-            <p class="book__line">one tower, one wizard, no escape route.</p>
+            <h3 class="book__title">Quicksilver</h3>
+            <p class="book__author">Callie Hart</p>
+            <p class="book__line">fae, thief, mutual loathing, extremely unwell.</p>
           </article>
         </div>
       </div>
@@ -223,9 +381,9 @@
          hiding it. Nobody can be hurt by an imaginary book club the
          way they could by an imaginary submissions queue: there's
          no action here that can fail a real person. -->
-    <section class="section" aria-label="What's on">
+    <section class="section" aria-label="Scry with us">
       <div class="container">
-        <h2 class="section-title section-title--mid">what&rsquo;s on</h2>
+        <h2 class="section-title section-title--mid">scry with us?</h2>
         <div class="playbills">
           <article class="playbill">
             <span class="playbill__glyph" aria-hidden="true">&#10023;</span>
@@ -246,22 +404,25 @@
             <p class="playbill__body">Everyone in the same room, nobody speaking. The fox attends. The fox sleeps.</p>
           </article>
         </div>
-        <p class="closing closing--after">The shop is imaginary, so the calendar is too &mdash; but this is the kind of thing a real one would run, and the kind of page it would need to run it.</p>
+        
       </div>
     </section>
 
     <!-- THE WISHING TABLE.
          Interactive: your wishes really are saved (localStorage), so
          this demonstrates a product-request feature end to end. The
-         crowd tallies are invented and labelled as such — inventing
-         social proof would be the same error as the fake queue. -->
-    <section class="section" aria-label="The wishing table">
+         crowd tallies are invented. The line labelling them as such was
+         dropped so the fiction reads clean on a screen recording — if
+         this ever goes live as a clickable link, restore it, since
+         implying real communal voting is exactly what the rest of the
+         site avoids. -->
+    <section class="section" id="wishing" aria-label="The wishing table">
       <div class="container">
         <div class="wishtable">
           <span class="wishtable__candle" aria-hidden="true">&#10023;</span>
           <p class="wishtable__eyebrow">the wishing table</p>
           <h2 class="wishtable__title">trinkets for the<br />tender-hearted</h2>
-          <p class="wishtable__body">None of it exists yet. Lay a hand on what you&rsquo;d want and the table will remember you &mdash; it really will, on this device.</p>
+          <p class="wishtable__body">Wish for your heart&rsquo;s desire, or make an offering to Hecate &mdash; and pray she finds it worthy.</p>
 
           <ul class="wishes" id="wishes"></ul>
 
@@ -275,23 +436,15 @@
           </form>
 
           <output class="wishtable__count" id="wishCount"></output>
-          <p class="wishtable__fine">Tallies are imagined. Your own wishes are saved on this device only &mdash; nothing is sent anywhere.</p>
         </div>
       </div>
     </section>
 
-    <!-- The real hook: Sagewave -->
-    <section class="band cta" id="contact" aria-label="About this site">
-      <div class="container">
-        <p class="cta__eyebrow">the part that&rsquo;s actually real &#10022;</p>
-        <h2 class="cta__title">The shop is a wish.<br />Yours doesn&rsquo;t<br />have to be.</h2>
-        <!-- Widened: the hero promises authors AND bookish businesses,
-             so the ask can't address only authors. -->
-        <p class="cta__body">A debut author whose book has no home online. A yarn shop, a bindery, a tea company, a bookstagrammer with something to sell. If you&rsquo;ve got something worth finding and nowhere to send people &mdash; that part I can make real.</p>
-        <a class="btn btn--moss" href="#" id="ctaBtn">start a conversation &#8599;</a>
-        <p class="cta__sign">Sagewave Web Design</p>
-      </div>
-    </section>
+    <!-- The Sagewave CTA band that used to close the page was removed
+         for the screen-recording cut — the fiction now ends on the
+         wishing table. Restore it (and the footer "real part" note,
+         the hero's Sagewave line, and the nav "let's talk" button) if
+         this ever goes live as a clickable portfolio piece. -->
 
   </main>
 
@@ -314,12 +467,7 @@
             <a href="portfolio.html">portfolio</a>
           </div>
         </nav>
-        <div>
-          <p class="sitefoot__heading">the real part</p>
-          <p class="sitefoot__note">Between the Veil is imaginary. Sagewave is not &mdash; it builds sites like this one for authors and bookish small businesses who need somewhere to send people.</p>
-        </div>
       </div>
-      <p class="sitefoot__legal">Between the Veil &#183; an imaginary bookshop, staged by Sagewave Web Design &#183; the books on the shelves are real, everything else is not</p>
     </div>
   </footer>
 
