@@ -1,1755 +1,1409 @@
 /* ============================================================
-   BETWEEN THE VEIL — a concept bookshop by Sagewave Web Design
-   ------------------------------------------------------------
-   Structure:
-     1. Design tokens (the "faerie twilight" palette + type)
-     2. Base / reset
-     3. Layout primitives (container, section, page header)
-     4. Site nav + site footer (shared by every page but the gate)
-     5. The threshold (the door — index.html only)
-     6. Home
-     7. Shelves
-     8. Spotlight (index + one author)
-     9. Portfolio
-    10. Shared components (buttons, shelves, books, tiles)
-    11. Motion & reduced-motion
-
-   Mobile-first. Three breakpoints, declared once in §3 and
-   echoed per-component where a grid needs to change:
-     phone    ≤ 560px   1 column
-     tablet   ≥ 561px   2 columns, 720px container
-     desktop  ≥ 1024px  3–4 columns, 1140px container
+   BETWEEN THE VEIL
+   Single-page editorial concept
    ============================================================ */
 
-/* 1. DESIGN TOKENS ------------------------------------------ */
+
+/* ============================================================
+   1. TOKENS
+   ============================================================ */
+
 :root {
-  /* Faerie-twilight palette */
-  --ink:        #0d0918;  /* deepest background */
-  --ink-2:      #120d22;  /* shop background */
-  --ink-3:      #161028;  /* raised panels */
-  --twilight:   #241640;  /* violet mid */
-  --violet-2:   #1a1330;
-  --moss:       #8fae7d;  /* the green accent */
-  --moss-deep:  #1f3a2e;
-  --rose:       #c98fb0;  /* the pink accent */
-  --rose-deep:  #3a2456;
-  --gold:       #d9c48f;  /* candlelight */
-  --gold-deep:  #2e2416;
-  --mist:       #c9c2e0;  /* soft lavender text */
-  --mist-dim:   #a99fc4;
-  --mist-faint: #7d759c;
-  --parchment:  #f4eeff;  /* near-white for headings */
 
-  /* Hairlines, derived from --mist so they sit in the palette */
-  --rule:      rgba(201, 194, 224, 0.16);
-  --rule-soft: rgba(201, 194, 224, 0.08);
+  --ink: #130e13;
+  --ink-soft: #1b141a;
+  --plum: #2a1825;
+  --wine: #46242f;
 
-  /* Type */
-  --display: 'Cinzel', Georgia, serif;
-  --voice:   'Quicksand', 'Trebuchet MS', sans-serif;
+  --paper: #eee6da;
+  --paper-deep: #ded2c1;
 
-  /* Rhythm.
-     Corners are square on purpose. Books have square corners;
-     rounded rectangles are the most generic shape on the web and
-     they were fighting the whole premise. Everything below is
-     built out of book anatomy instead — spines, page edges,
-     bookmark tails, foil stamping, library-card ruling. */
-  --pad: 14px;
-  --radius: 0px;
-  --radius-pill: 0px;
+  --cream: #f7f1e8;
+  --gold: #b99b67;
 
-  /* Book-shape kit */
-  --spine-w: 10px;                              /* card spine width */
-  --gilt: rgba(217, 196, 143, 0.45);            /* stamped-gold rule */
-  --gilt-faint: rgba(217, 196, 143, 0.18);
-  --shelf-wood: linear-gradient(180deg, #3d2e1d, #221a11 60%, #150f0a);
-  /* the fanned edge of a closed book */
-  --page-edge: repeating-linear-gradient(
-     180deg, rgba(244,238,255,0.20) 0 1px, transparent 1px 3px);
-  /* faint laid-paper texture for parchment panels */
-  --laid: repeating-linear-gradient(
-     90deg, rgba(244,238,255,0.022) 0 1px, transparent 1px 4px);
-  --gutter: 16px;
-  --measure: 65ch;   /* comfortable reading width for body copy */
-  --nav-h: 58px;
+  --moss: #66705b;
+  --rose: #9a6578;
+
+  --text-light: #ddd3db;
+  --text-muted: #a89ba5;
+
+  --text-dark: #282125;
+  --text-dark-muted: #6b6265;
+
+  --line-light: rgba(255, 255, 255, 0.12);
+  --line-dark: rgba(40, 33, 37, 0.18);
+
+  --serif: "Bodoni Moda", Georgia, serif;
+  --sans: "DM Sans", Arial, sans-serif;
+
+  --wrap: 1180px;
+  --gutter: clamp(20px, 4vw, 52px);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* 2. BASE / RESET ------------------------------------------- */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+/* ============================================================
+   2. RESET
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 html {
-  background: var(--ink);
   scroll-behavior: smooth;
-  /* anchor links land below the sticky nav instead of under it */
-  scroll-padding-top: calc(var(--nav-h) + 16px);
+  background: var(--ink);
 }
 
 body {
-  min-height: 100%;
+  min-height: 100vh;
   background: var(--ink);
-  color: var(--mist);
-  font-family: var(--voice);
+  color: var(--text-light);
+  font-family: var(--sans);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* THE GATE.
-   A tiny inline script in index.html's <head> stamps one of these
-   on <html> before first paint — deferred JS would let the door
-   flash for a returning visitor. veil.js swaps is-gated off the
-   moment you step through.
-
-   With JS disabled neither class lands, so everything renders:
-   door on top, home beneath it. Degrades to a long scroll, which
-   is the right failure. */
-html.is-gated, html.is-gated body { overflow: hidden; height: 100%; }
-html.is-gated .sitenav,
-html.is-gated .shop,
-html.is-gated .sitefoot { display: none; }
-html.has-entered .threshold { display: none; }
-
-h1, h2, h3, h4 {
-  font-family: var(--display);
-  font-weight: 500;
-  color: var(--parchment);
-  line-height: 1.12;
-  text-wrap: balance;
+button,
+input {
+  font: inherit;
 }
 
-em { font-style: italic; }
-img { max-width: 100%; display: block; }
-
-a { color: var(--gold); }
-
-/* One visible focus ring for the whole site. */
-a:focus-visible,
-button:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-  border-radius: 4px;
+button {
+  cursor: pointer;
 }
 
-/* 3. LAYOUT PRIMITIVES -------------------------------------- */
-.container {
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--rose);
+  color: var(--cream);
+}
+
+
+/* ============================================================
+   3. GATE
+   ============================================================ */
+
+html.is-gated,
+html.is-gated body {
+  overflow: hidden;
+}
+
+html.is-gated .site-shell {
+  display: none;
+}
+
+html.has-entered .threshold {
+  display: none;
+}
+
+
+/* ============================================================
+   4. SHARED LAYOUT
+   ============================================================ */
+
+.wrap {
   width: 100%;
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 0 var(--gutter);
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-.section { padding: 40px 0; }
-.section--tight { padding: 24px 0; }
-
-/* A band that breaks out to full width with its own ground —
-   used for the CTA so the tonal shift signals "this part is real". */
-.band {
-  padding: 48px 0;
-  border-top: 1px solid var(--rule-soft);
-  border-bottom: 1px solid var(--rule-soft);
+.section {
+  padding-block: clamp(76px, 10vw, 150px);
 }
 
-.page-head { padding: 32px 0 8px; text-align: center; }
-.page-head__eyebrow {
+.section--paper {
+  background: var(--paper);
+  color: var(--text-dark);
+}
+
+.eyebrow {
+  margin-bottom: 18px;
+
   font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+
   color: var(--gold);
 }
-.page-head__title { font-size: 30px; margin-top: 10px; }
-.page-head__body {
-  font-size: 14px;
-  color: var(--mist-dim);
-  line-height: 1.6;
-  max-width: var(--measure);
-  margin: 12px auto 0;
+
+.eyebrow--dark {
+  color: #725d47;
 }
 
-@media (min-width: 561px) {
-  :root { --gutter: 24px; }
-  .container { max-width: 720px; }
-  .section { padding: 56px 0; }
-  .page-head__title { font-size: 38px; }
-  .page-head__body { font-size: 15px; }
+.section-heading {
+  margin-bottom: clamp(44px, 7vw, 80px);
 }
 
-@media (min-width: 1024px) {
-  :root { --gutter: 32px; --nav-h: 68px; }
-  .container { max-width: 1140px; }
-  .section { padding: 72px 0; }
-  .band { padding: 80px 0; }
-  .page-head { padding: 56px 0 16px; }
-  .page-head__title { font-size: 46px; }
-}
-
-/* A left-aligned heading for sections inside a page, as opposed
-   to .page-head__title which is the centred one at the top. */
-.section-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-/* Centred variant — home's sections are centred, the inner pages'
-   are left-aligned against a reading measure. */
-.section-title--mid { text-align: center; }
-
-/* Body copy inside a wide container still needs a reading measure. */
-.prose { max-width: var(--measure); }
-.prose p + p { margin-top: 1em; }
-.prose p { color: var(--mist-dim); line-height: 1.75; }
-
-/* Inline code, portfolio page only — the one place the site
-   speaks in plain technical voice. */
-code {
-  font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
-  font-size: 0.88em;
-  color: var(--gold);
-  background: rgba(217, 196, 143, 0.09);
-  padding: 0.1em 0.4em;
-  border-radius: 4px;
-}
-
-/* Scaffolding notice on the sample spotlight. Delete the markup
-   (and this rule) once a real author has been featured. */
-.sample-note {
-  margin-top: 16px;
-  padding: 12px 16px;
-  border-radius: var(--radius);
-  border: 1px dashed rgba(217, 196, 143, 0.4);
-  background: rgba(217, 196, 143, 0.05);
-  font-size: 13px;
-  font-style: italic;
-  color: var(--mist-dim);
-  line-height: 1.6;
-}
-
-@media (min-width: 1024px) {
-  .section-title { font-size: 32px; }
-}
-
-/* 4. SITE NAV + FOOTER -------------------------------------- */
-.sitenav {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  background: rgba(13, 9, 24, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--rule-soft);
-}
-
-/* The gated landing page hides its nav until you're through. */
-.sitenav[hidden] { display: none; }
-
-.sitenav__inner {
-  height: var(--nav-h);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.sitenav__mark {
-  font-family: var(--display);
-  font-size: 16px;
-  letter-spacing: 0.04em;
-  color: var(--parchment);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.sitenav__toggle {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  flex: none;
-}
-.sitenav__bar {
-  display: block;
-  width: 22px;
-  height: 1.5px;
-  background: var(--mist);
-  transition: transform 0.28s ease, opacity 0.2s ease;
-}
-.sitenav__toggle[aria-expanded="true"] .sitenav__bar:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.sitenav__toggle[aria-expanded="true"] .sitenav__bar:nth-child(2) { opacity: 0; }
-.sitenav__toggle[aria-expanded="true"] .sitenav__bar:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-/* Phone: the menu is a veil that draws across the screen.
-
-   Positioned ABSOLUTE, not fixed, and that's deliberate. .sitenav
-   carries a backdrop-filter, which per spec makes it the containing
-   block for fixed-position descendants — so `position: fixed` here
-   resolved against the 58px nav bar instead of the viewport and
-   collapsed the panel to zero height. Absolute against .sitenav is
-   explicit about what it's measuring from, and can't silently break
-   again if the bar's filter changes.
-
-   The ground is fully opaque. A translucent veil over a busy page
-   is prettier and unreadable, and this is a menu. */
-.sitenav__menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: calc(100vh - var(--nav-h));
-  height: calc(100dvh - var(--nav-h));
-  z-index: 55;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  background: linear-gradient(180deg, #140e28 0%, #0a0614 100%);
-  border-top: 1px solid var(--rule-soft);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s;
-}
-.sitenav__menu.is-open { opacity: 1; visibility: visible; }
-
-.sitenav__link {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.05em;
-  color: var(--mist);
-  text-decoration: none;
-  /* generous enough to be a real tap target, not a 30px sliver */
-  padding: 12px 20px;
-  border-bottom: 1px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease, opacity 0.4s ease, transform 0.4s ease;
-}
-.sitenav__link:hover { color: var(--parchment); }
-
-/* Current page: a quiet gold underline, never a filled pill. */
-.sitenav__link[aria-current="page"] {
-  color: var(--parchment);
-  border-bottom-color: var(--gold);
-}
-
-.sitenav__link--gold {
-  color: var(--ink);
-  background: var(--gold);
-  padding: 10px 22px;
-  font-family: var(--voice);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  border-bottom: none;
-  /* same foil-stamped rule as .btn--gold */
-  box-shadow: inset 0 0 0 1px var(--gold), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
-}
-.sitenav__link--gold:hover { color: var(--ink); filter: brightness(1.07); }
-
-/* Links fade up in sequence once the veil is across. */
-.sitenav__menu .sitenav__link { opacity: 0; transform: translateY(10px); }
-.sitenav__menu.is-open .sitenav__link { opacity: 1; transform: none; }
-.sitenav__menu.is-open .sitenav__link:nth-child(1) { transition-delay: 0.08s; }
-.sitenav__menu.is-open .sitenav__link:nth-child(2) { transition-delay: 0.14s; }
-.sitenav__menu.is-open .sitenav__link:nth-child(3) { transition-delay: 0.20s; }
-.sitenav__menu.is-open .sitenav__link:nth-child(4) { transition-delay: 0.26s; }
-.sitenav__menu.is-open .sitenav__link:nth-child(5) { transition-delay: 0.32s; }
-
-/* Desktop: a plain horizontal bar, no toggle, no overlay. */
-@media (min-width: 1024px) {
-  .sitenav__toggle { display: none; }
-  .sitenav__mark { font-size: 19px; }
-  .sitenav__menu {
-    position: static;
-    inset: auto;
-    /* the mobile panel's full-screen height must be undone too,
-       or the bar inherits a viewport-tall menu */
-    height: auto;
-    flex-direction: row;
-    align-items: center;
-    gap: 30px;
-    background: none;
-    border-top: none;
-    opacity: 1;
-    visibility: visible;
-  }
-  .sitenav__menu .sitenav__link {
-    opacity: 1;
-    transform: none;
-    transition-delay: 0s;
-    font-family: var(--voice);
-    font-size: 14px;
-    letter-spacing: 0.12em;
-    padding: 4px 2px;
-  }
-  /* Must match the specificity of `.sitenav__menu .sitenav__link`
-     above (0,2,0) or the pill loses its padding and size to it. */
-  .sitenav__menu .sitenav__link--gold {
-    font-size: 13px;
-    padding: 10px 22px;
-  }
-}
-
-/* Footer — stacked on phone, three columns on desktop. */
-.sitefoot {
-  border-top: 1px solid var(--rule-soft);
-  background: #0a0614;
-  padding: 40px 0 32px;
-  margin-top: 24px;
-}
-.sitefoot__inner {
+.section-heading__split {
   display: grid;
   gap: 28px;
 }
-.sitefoot__mark {
-  font-family: var(--display);
-  font-size: 18px;
-  color: var(--parchment);
+
+.section-heading h2 {
+  max-width: 780px;
+
+  font-family: var(--serif);
+  font-size: clamp(45px, 7vw, 82px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
 }
-.sitefoot__whisper {
-  font-style: italic;
-  font-size: 13px;
-  color: var(--mist-faint);
-  margin-top: 6px;
+
+.section-heading p {
+  max-width: 430px;
+
+  font-size: 15px;
+  color: var(--text-dark-muted);
 }
-.sitefoot__heading {
-  font-family: var(--voice);
+
+.section-heading--light p {
+  color: var(--text-muted);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+
+  transition:
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+
+/* ============================================================
+   5. BUTTONS + LINKS
+   ============================================================ */
+
+.button {
+  border: 0;
+  padding: 14px 24px;
+
   font-size: 11px;
-  letter-spacing: 0.18em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--mist-faint);
-  margin-bottom: 12px;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
-.sitefoot__links { display: grid; gap: 9px; }
-.sitefoot__links a {
-  color: var(--mist-dim);
-  text-decoration: none;
-  font-size: 14px;
-  justify-self: start;
-  border-bottom: 1px solid transparent;
+
+.button:hover {
+  transform: translateY(-2px);
 }
-.sitefoot__links a:hover { color: var(--parchment); border-bottom-color: var(--rule); }
-.sitefoot__note { font-size: 13px; color: var(--mist-dim); line-height: 1.6; }
-.sitefoot__legal {
+
+.button--gold {
+  background: var(--gold);
+  color: #1c1419;
+}
+
+.button--ink {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
   margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--rule-soft);
+
   font-size: 12px;
-  font-style: italic;
-  color: #6f6790;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  text-decoration: none;
+
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 5px;
+
+  width: max-content;
 }
 
-@media (min-width: 1024px) {
-  .sitefoot { padding: 56px 0 36px; }
-  .sitefoot__inner { grid-template-columns: 1.5fr 1fr 1.2fr; gap: 48px; }
+.text-link span {
+  transition: transform 0.2s ease;
 }
 
-/* 5. THE THRESHOLD ------------------------------------------ */
+.text-link:hover span {
+  transform: translateY(4px);
+}
+
+.text-link--button {
+  background: none;
+  color: var(--gold);
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
+.text-link--button:hover span {
+  transform: translateX(5px);
+}
+
+
+/* ============================================================
+   6. THRESHOLD / DOOR
+   ============================================================ */
+
 .threshold {
   position: relative;
+
   min-height: 100vh;
-  min-height: 100svh;   /* mobile browser chrome doesn't clip the door */
-  width: 100%;
+  min-height: 100svh;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 2rem 1.4rem;
+
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 42%, #241640 0%, #140e28 48%, #0a0614 100%);
+
+  padding: 40px 20px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      rgba(15, 9, 14, 0.55),
+      rgba(10, 7, 10, 0.88)
+    ),
+    #130e13;
 }
 
-.threshold[hidden] { display: none; }
-
-.motes { position: absolute; inset: 0; pointer-events: none; }
-.mote {
+.threshold__wash {
   position: absolute;
-  border-radius: 50%;
-  background: rgba(217, 196, 143, 0.7);
-  box-shadow: 0 0 6px rgba(217, 196, 143, 0.6);
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(133, 86, 92, 0.22),
+      transparent 34%
+    );
 }
 
-.threshold__whisper {
-  position: absolute;
-  top: 26px; left: 0; right: 0;
-  font-style: italic;
-  font-size: 13px;
-  letter-spacing: 0.18em;
-  color: var(--mist-faint);
-  z-index: 2;
-}
-
-/* Ungated escape hatch. Quiet, but always reachable by keyboard. */
-.threshold__skip {
-  position: absolute;
-  right: 18px;
-  bottom: 18px;
-  z-index: 10;
-  font-family: var(--voice);
-  font-size: 12px;
-  font-style: italic;
-  letter-spacing: 0.08em;
-  color: var(--mist-faint);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px 10px;
-  transition: color 0.2s ease;
-}
-.threshold__skip:hover { color: var(--mist); }
-
-/* Mirrors the skip button on the opposite corner. */
-.threshold__credit {
-  position: absolute;
-  left: 18px;
-  bottom: 18px;
-  z-index: 10;
-  font-size: 11.5px;
-  font-style: italic;
-  letter-spacing: 0.08em;
-  color: var(--mist-faint);
-  max-width: 45vw;
-  text-align: left;
-}
-
-.threshold__center { position: relative; z-index: 5; }
-.threshold__welcome { font-style: italic; font-size: 15px; letter-spacing: 0.08em; color: #b6a9d4; margin-bottom: 10px; }
-.threshold__title {
-  font-size: clamp(46px, 9vw, 92px);
-  color: var(--parchment);
-  text-shadow: 0 0 28px rgba(180, 150, 220, 0.45);
-}
-.threshold__title em { font-weight: 400; color: var(--rose); }
-.threshold__sub {
-  font-style: italic;
-  font-size: clamp(15px, 1.6vw, 19px);
-  color: var(--mist);
-  margin-top: 14px;
-  line-height: 1.5;
-}
-
-.wish { position: relative; z-index: 5; margin-top: 2rem; }
-.wish__hint { font-style: italic; font-size: 12px; color: var(--mist-faint); margin-top: 12px; }
-
-.threshold__parted {
+.threshold__copy {
   position: relative;
   z-index: 5;
-  margin-top: 2rem;
+
+  margin-bottom: 25px;
+}
+
+.threshold__kicker {
+  margin-bottom: 10px;
+
+  color: var(--gold);
+
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.threshold__name {
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: 1;
+}
+
+.threshold__line {
+  margin-top: 12px;
+
+  color: var(--text-muted);
+
+  font-family: var(--serif);
+  font-size: 17px;
   font-style: italic;
-  font-size: 16px;
-  color: #e8dcf0;
-  line-height: 1.5;
-  opacity: 0;
-  transition: opacity 0.8s ease;
 }
-.threshold__parted span { font-size: 13px; color: var(--mist-dim); }
-.threshold__parted.is-visible { opacity: 1; cursor: pointer; }
 
-/* The gothic door — two photographic halves that swing open,
-   with a warm candlelight glow revealed behind them.
-   The door image was split down its centre seam into
-   img/door-left.jpg and img/door-right.jpg.
-
-   The door stays a door: rather than stretching to fill a
-   1920px viewport, it caps at a plausible doorway width and
-   centres, so wide screens read as a dark room around it. */
 .door {
-  position: absolute;
-  top: 0; bottom: 0; left: 0; right: 0;
-  margin: 0 auto;            /* centres once max-width bites */
-  width: 100%;
-  z-index: 3;
-  perspective: 1400px;       /* gives the swing real depth */
-  pointer-events: none;      /* taps pass through to the button */
+  position: relative;
+  z-index: 2;
+
+  width: min(420px, 74vw);
+  height: min(54vh, 600px);
+
+  perspective: 1400px;
 }
-.door__glow {
+
+.door__light {
   position: absolute;
-  left: 50%; top: 50%;
-  width: 40%; height: 96%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse 60% 50% at center, rgba(255,225,160,0.98), rgba(224,150,70,0.75) 45%, rgba(150,70,40,0.5) 70%, transparent 100%);
-  opacity: 0.9;
-  transition: opacity 1.3s ease, width 1.3s ease;
+
+  inset: 4% 14% 0;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 220, 153, 0.95),
+      rgba(194, 122, 65, 0.48) 42%,
+      transparent 72%
+    );
+
+  opacity: 0.15;
+
+  transition:
+    opacity 1.4s ease,
+    transform 1.4s ease;
+
+  transform: scaleX(0.35);
 }
-.door.is-opening .door__glow { opacity: 1; width: 70%; }
+
+.door.is-opening .door__light {
+  opacity: 0.95;
+  transform: scaleX(1.2);
+}
+
 .door__half {
   position: absolute;
   top: 0;
-  height: 100%;
+
   width: 50%;
+  height: 100%;
+
+  background-color: #2b201d;
   background-size: cover;
-  background-position: center;
-  transition: transform 1.6s cubic-bezier(0.6, 0, 0.25, 1);
+
   backface-visibility: hidden;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
-}
-.door__half--left  { left: 0;  background-image: url('../img/door-left.jpg');  transform-origin: left center;  }
-.door__half--right { right: 0; background-image: url('../img/door-right.jpg'); transform-origin: right center; }
-/* the swing: each half rotates outward on its hinge */
-.door__half--left.is-open  { transform: rotateY(-105deg); }
-.door__half--right.is-open { transform: rotateY(105deg); }
 
-@media (min-width: 700px) {
-  .door { max-width: 620px; }
-  /* light spills past the frame once the halves are open */
-  .door.is-opening .door__glow { width: 120%; }
+  transition:
+    transform 1.7s cubic-bezier(0.5, 0, 0.2, 1);
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
-/* 6. HOME --------------------------------------------------- */
-.shop { width: 100%; }
-.shop[hidden] { display: none; }
-
-.hero {
-  position: relative;
-  text-align: center;
-  padding: 48px 0 32px;
-  overflow: hidden;
-}
-/* the threshold's atmosphere doesn't stop at the door */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: -40% 0 auto;
-  height: 340px;
-  background: radial-gradient(ellipse 60% 100% at 50% 0%, rgba(217,196,143,0.13), transparent 70%);
-  pointer-events: none;
-}
-.hero__eyebrow {
-  position: relative;
-  font-style: italic;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: var(--moss);
-}
-.hero__heading {
-  position: relative;
-  font-size: clamp(28px, 5vw, 54px);
-  margin-top: 10px;
-}
-/* The orienting sentence. Bigger, lighter-weight, NOT italic and
-   NOT dimmed — everything else in this hero is atmosphere, and
-   atmosphere is exactly what a five-second visitor can't read. */
-.hero__sub {
-  position: relative;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--mist);
-  margin: 18px auto 0;
-  max-width: 56ch;
-}
-.hero__sub strong { color: var(--parchment); font-weight: 600; }
-
-.hero__aside {
-  position: relative;
-  font-style: italic;
-  font-size: 14px;
-  color: var(--mist-faint);
-  margin: 10px auto 0;
-}
-
-@media (min-width: 1024px) {
-  .hero__sub { font-size: 18px; }
-  .hero__aside { font-size: 15px; }
-}
-
-/* Frontispiece ornament — a rule broken by a glyph, the way a
-   title page divides itself. Used sparingly: twice on home. */
-.ornament {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin: 26px auto 0;
-  max-width: 320px;
-  color: var(--gold);
-  font-size: 13px;
-  line-height: 1;
-}
-.ornament::before,
-.ornament::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gilt));
-}
-.ornament::after { background: linear-gradient(90deg, var(--gilt), transparent); }
-
-@media (min-width: 1024px) {
-  .hero { padding: 80px 0 56px; }
-}
-
-/* THE BOOKCASE — the home hero.
-   A stack of shelves inside a wooden case. Each .bookcase__shelf is
-   a flex row of whatever stands on it, resting on a wooden rail (the
-   ::after, the same rail the old mood row used). The two side stiles
-   and the crown are pseudo-elements and full-bleed children, so the
-   markup stays a plain stack of divs. Built from the site's existing
-   book parts: --shelf-wood for the rails, .shelf for the spines,
-   --gilt for the stamping. */
-.bookcase {
-  position: relative;
-  margin: 0 auto;
-  max-width: 760px;
-  /* the horizontal padding is the frame: it clears the side stiles */
-  padding: 0 clamp(16px, 4vw, 30px) 6px;
-  background:
-    linear-gradient(180deg, rgba(13, 9, 24, 0.35), rgba(13, 9, 24, 0.72)),
-    var(--laid),
-    linear-gradient(180deg, #201811, #14100b);
-  border: 1px solid rgba(217, 196, 143, 0.16);
-  box-shadow:
-    0 40px 90px rgba(0, 0, 0, 0.55),
-    inset 0 0 70px rgba(0, 0, 0, 0.55);
-}
-
-/* the two uprights of the case */
-.bookcase::before,
-.bookcase::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: clamp(11px, 3vw, 22px);
-  background: linear-gradient(90deg, #3d2e1d, #221a11 55%, #150f0a);
-  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-  z-index: 0;
-}
-.bookcase::before { left: 0; }
-.bookcase::after  { right: 0; }
-
-/* the carved cornice, capping the case across both stiles */
-.bookcase__crown {
-  position: relative;
-  z-index: 1;
-  margin-inline: calc(-1 * clamp(16px, 4vw, 30px));
-  padding: 15px 16px 13px;
-  text-align: center;
-  font-family: var(--display);
-  font-size: 13px;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--gold);
-  text-shadow: 0 0 18px rgba(217, 196, 143, 0.35);
-  background: linear-gradient(180deg, #2b2013, #1a130c);
-  border-bottom: 1px solid var(--gilt-faint);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-}
-
-/* every shelf sits its contents on a wooden rail */
-.bookcase__shelf {
-  position: relative;
-  z-index: 1;
-}
-.bookcase__shelf::after {
-  content: '';
-  position: absolute;
+.door__half--left {
   left: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(37, 21, 22, 0.12),
+      rgba(18, 10, 12, 0.25)
+    ),
+    url("../img/door-left.jpg");
+
+  background-position: center;
+
+  transform-origin: left center;
+}
+
+.door__half--right {
   right: 0;
-  bottom: 0;
-  height: 9px;
-  background: var(--shelf-wood);
-  box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(217, 196, 143, 0.22);
+
+  background-image:
+    linear-gradient(
+      rgba(37, 21, 22, 0.12),
+      rgba(18, 10, 12, 0.25)
+    ),
+    url("../img/door-right.jpg");
+
+  background-position: center;
+
+  transform-origin: right center;
 }
 
-/* SHELF ONE — the heading, propped like a shop sign */
-.bookcase__shelf--sign {
-  text-align: center;
-  padding: 22px 4px 20px;
-}
-/* the hero's own type is reused; the spacing changes in here, and
-   this heading runs longer than the old one, so it sets a touch
-   smaller to keep to two lines instead of towering over the case */
-.bookcase__shelf--sign .hero__heading {
-  margin-top: 8px;
-  font-size: clamp(26px, 4.4vw, 44px);
+.door__half--left.is-open {
+  transform: rotateY(-106deg);
 }
 
-/* SHELF TWO — the spines stand on the rail, uneven like real books.
-   Reuses .shelf wholesale but at hero scale: shorter than the
-   shelves-page spines so the case doesn't tower. The nth-child
-   overrides beat .shelf's own (they carry an extra id of specificity
-   from the descendant selector) so the heights actually take. */
-.bookcase__shelf--books {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 5px;
-  padding: 26px 0 9px;   /* 9px = the rail; books rest right on it */
-}
-.bookcase__shelf--books .shelf {
-  height: 176px;
-  padding: 15px 10px;
-  font-size: 12px;
-}
-.bookcase__shelf--books .shelf:nth-child(2n) { height: 192px; }
-.bookcase__shelf--books .shelf:nth-child(3n) { height: 166px; }
-.bookcase__shelf--books .shelf:nth-child(5n) { height: 184px; }
-
-/* the fox, asleep at the end of the row */
-.fox {
-  flex: 0 0 auto;
-  align-self: flex-end;
-  width: clamp(88px, 17vw, 122px);
-  margin-left: 4px;
-}
-.fox__svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  transform-origin: 50% 100%;
-  /* the slow rise and fall of a sleeping thing */
-  animation: foxBreathe 4.8s ease-in-out infinite;
-}
-@keyframes foxBreathe {
-  0%, 100% { transform: scaleY(1); }
-  50%      { transform: scaleY(1.035); }
+.door__half--right.is-open {
+  transform: rotateY(106deg);
 }
 
-/* SHELF THREE — three objects, each a link deeper into the shop */
-.bookcase__shelf--props {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: center;
-  gap: clamp(18px, 6vw, 52px);
-  padding: 28px 0 16px;
-}
-.prop {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-.prop:hover,
-.prop:focus-visible { transform: translateY(-5px); }
-.prop__icon {
-  display: block;
-  width: clamp(54px, 13vw, 72px);
-  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
-}
-.prop__icon svg { display: block; width: 100%; height: auto; }
-.prop__label {
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-  transition: color 0.2s ease;
-}
-.prop:hover .prop__label,
-.prop:focus-visible .prop__label { color: var(--parchment); }
+.threshold__action {
+  position: relative;
+  z-index: 6;
 
-/* SHELF-TALKER — a little paper note stuck to the books shelf, in
-   the shop's handwriting (Caveat). It carries the one thing the
-   picture can't: that the spines are doors you can pull. Placed to
-   the right, clear of the books, and pointer-events:none so a tap
-   lands on the spine behind it. */
-.sticky {
-  position: absolute;
-  z-index: 4;
+  margin-top: 26px;
+
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.threshold__action.is-hidden {
+  opacity: 0;
+  transform: translateY(8px);
   pointer-events: none;
-  font-family: 'Caveat', var(--voice);
-  font-weight: 600;
-  line-height: 1.02;
-  text-align: center;
-  color: #3a2e18;
-  padding: 9px 13px 11px;
-  box-shadow: 0 9px 16px rgba(0, 0, 0, 0.5);
-}
-.sticky b { display: block; font-weight: 700; font-size: 1.16em; }
-.sticky i { font-style: italic; }
-
-/* a strip of tape across the top */
-.sticky::before {
-  content: '';
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  width: 42px;
-  height: 15px;
-  transform: translateX(-50%) rotate(-2deg);
-  background: rgba(233, 220, 180, 0.42);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 
-/* the short note (left) — the call to action */
-.sticky--pull {
-  top: 2px;
-  left: clamp(-4px, 1%, 22px);
-  width: 116px;
-  font-size: 18px;
-  background: linear-gradient(180deg, #f3e7bf, #ead79f);
-  transform: rotate(-5deg);
-}
-/* its scribbled arrow, curving from the lower-right toward the spines */
-.sticky__arrow {
-  position: absolute;
-  right: -8px;
-  bottom: -18px;
-  width: 38px;
-  height: auto;
-  transform: rotate(4deg);
-}
-
-/* the longer note (right) — what's behind the doors. Off past the
-   fox, on a rose-tinted leaf so the two read as two different hands. */
-.sticky--realm {
-  top: 8px;
-  right: clamp(-4px, 1%, 22px);
-  width: 150px;
-  font-size: 16px;
-  background: linear-gradient(180deg, #f1dde7, #e7cbda);
-  transform: rotate(4deg);
-}
-
-/* Phone: no side room, so both notes pin in the space above the
-   spines instead of covering them (the spines are tap targets). */
-@media (max-width: 560px) {
-  .bookcase__shelf--books { padding-top: 60px; }
-  .sticky--pull  { top: 22px; left: 0; font-size: 15px; width: 100px; }
-  .sticky--realm { top: -4px; right: 0; font-size: 12.5px; width: 138px; }
-}
-
-/* the plinth — the one thing to actually read, and the way in */
-.bookcase__base {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: 26px clamp(6px, 3vw, 22px) 4px;
-}
-.bookcase__base .hero__sub { margin: 0 auto; }
-.bookcase__base .btn { margin-top: 22px; }
-.bookcase__base .hero__aside { margin-top: 14px; }
-
-@media (min-width: 700px) {
-  .bookcase__shelf--books { gap: 7px; }
-}
-@media (min-width: 1024px) {
-  .bookcase { padding-bottom: 10px; }
-  .bookcase__crown { font-size: 14px; padding: 18px 16px 15px; }
-  .bookcase__shelf--sign { padding: 30px 4px 26px; }
-}
-
-/* The DIRECTORY and the old home mood-row (.shelves container) used
-   to live here. Both are gone: the hero bookcase is the shop's one
-   set of doors now, and .shelf — the book-spine treatment it reuses
-   — is defined with the shared components in §10. */
-
-/* Featured reads */
-.reads {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-/* A card shaped like a book seen face-on: coloured spine down the
-   left, fanned page edges down the right, square corners. The two
-   pseudo-elements do all of it, so the markup stays a plain
-   <article> with no decorative divs. */
-.book {
-  position: relative;
-  overflow: hidden;
-  padding: 18px 26px 18px 30px;   /* clears spine left, pages right */
-  border: 1px solid;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-/* the spine */
-.book::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: var(--spine-w);
-  background: var(--spine, var(--mist-faint));
-  box-shadow:
-    inset -2px 0 5px rgba(0, 0, 0, 0.5),
-    inset 2px 0 0 rgba(255, 255, 255, 0.14);
-}
-
-/* the fanned page block */
-.book::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 7px;
-  bottom: 7px;
-  width: 8px;
-  background: var(--page-edge);
-  opacity: 0.55;
-}
-
-.book:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
-}
-
-.book--rose { --spine: var(--rose); background: linear-gradient(160deg, #3a2456, #1e1436); border-color: rgba(201, 143, 176, 0.28); }
-.book--moss { --spine: var(--moss); background: linear-gradient(160deg, #1f3a2e, #132018); border-color: rgba(143, 174, 125, 0.28); }
-.book--gold { --spine: var(--gold); background: linear-gradient(160deg, #2e2416, #17120b); border-color: rgba(217, 196, 143, 0.28); }
-
-/* Bookplate line — small caps over a hairline, the way a shop
-   writes on the slip tucked inside the cover. */
-.book__badge {
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  padding-bottom: 8px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--rule-soft);
-}
-.book__badge--rose { color: #d98fb8; }
-.book__badge--moss { color: var(--moss); }
-.book__badge--gold { color: var(--gold); }
-.book__title { font-weight: 600; font-size: 19px; margin: 8px 0 4px; }
-/* Real author, set plainly — attribution, not decoration. */
-.book__author {
-  font-size: 12.5px;
-  letter-spacing: 0.04em;
-  color: var(--mist-faint);
-  margin-bottom: 8px;
-}
-.book__line { font-style: italic; font-size: 13px; color: var(--mist-dim); }
-
-/* Sequel warning. Gold because it's the one thing on the card a
-   reader needs BEFORE they buy, not after. */
-.book__series {
-  margin-top: 10px;
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-  color: var(--gold);
-  opacity: 0.85;
-}
-
-@media (min-width: 561px) {
-  .reads { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 1024px) {
-  .reads { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .book { padding: 22px; }
-}
-
-/* The spotlight feature — the block a featured author screenshots.
-   Portrait left, words right, once there's room for both. */
-/* Gilt frame — a rule set in from the edge, like blocking on a
-   cover board. box-shadow does it without an extra wrapper. */
-.feature {
-  display: grid;
-  gap: 20px;
-  padding: 26px;
-  background: var(--laid), var(--ink-3);
-  border: 1px solid rgba(217, 196, 143, 0.32);
-  box-shadow: inset 0 0 0 5px var(--ink-3), inset 0 0 0 6px var(--gilt-faint);
-}
-.feature__portrait {
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius);
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(ellipse at 50% 35%, rgba(217,196,143,0.16), transparent 65%),
-    linear-gradient(160deg, var(--twilight), var(--ink));
-  border: 0.5px solid rgba(217, 196, 143, 0.22);
-}
-/* the cameo fills its frame; viewBox is 4:5, same as the portrait */
-.feature__portrait svg { display: block; width: 100%; height: 100%; }
-.feature__eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  color: var(--gold);
-  text-transform: uppercase;
-}
-.feature__title { font-size: 25px; margin: 8px 0 10px; }
-.feature__body { font-size: 14px; color: var(--mist); line-height: 1.65; }
-.feature__body + .feature__body { margin-top: 10px; }
-.feature__moon {
-  font-style: italic;
-  font-size: 13px;
-  color: var(--mist-faint);
-  margin-top: 14px;
-}
-
-@media (min-width: 700px) {
-  .feature { grid-template-columns: 200px 1fr; align-items: center; gap: 28px; padding: 28px; }
-}
-@media (min-width: 1024px) {
-  .feature { grid-template-columns: 300px 1fr; gap: 44px; padding: 40px; }
-  .feature__title { font-size: 34px; }
-  .feature__body { font-size: 15px; }
-}
-
-@media (min-width: 1024px) {
-}
-
-/* WHAT'S ON — playbills pinned to a board. */
-.playbills {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-.playbill {
-  padding: 24px 20px;
-  text-align: center;
-  border: 1px solid var(--rule-soft);
-  border-top: 2px solid var(--gilt);
-  background: var(--laid), var(--ink-3);
-}
-.playbill__glyph { display: block; font-size: 22px; color: var(--rose); line-height: 1; margin-bottom: 12px; }
-.playbill__when {
-  font-size: 10.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.playbill__title { font-size: 20px; margin: 10px 0 9px; }
-.playbill__body { font-size: 13px; color: var(--mist-dim); line-height: 1.6; }
-
-@media (min-width: 700px) {
-  .playbills { grid-template-columns: repeat(3, 1fr); }
-}
-@media (min-width: 1024px) {
-  .playbills { gap: 20px; }
-  .playbill { padding: 32px 26px; }
-}
-
-/* THE WISHING TABLE.
-   A round table seen at an angle: the asymmetric border-radius
-   domes the top edge into an ellipse while the base stays flat,
-   and a candle glow sits at the far edge. Round on purpose — the
-   rest of the site is squared like a book, so the one circle in
-   the design reads as furniture rather than as a stray rounded
-   rectangle. */
-.wishtable {
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-  padding: 56px 20px 40px;
-  border: 1px solid rgba(217, 196, 143, 0.28);
-  border-radius: 46% 46% 10px 10px / 17% 17% 6px 6px;
-  background:
-    radial-gradient(ellipse 62% 46% at 50% 24%, rgba(217, 196, 143, 0.18), transparent 68%),
-    var(--laid),
-    linear-gradient(180deg, #2b2015 0%, #1c1510 46%, #120d0a 100%);
-  box-shadow: 0 26px 54px rgba(0, 0, 0, 0.5);
-}
-
-.wishtable__candle {
-  display: block;
-  font-size: 26px;
-  line-height: 1;
-  color: var(--gold);
-  text-shadow: 0 0 22px rgba(255, 225, 160, 0.7);
-  margin-bottom: 14px;
-}
-.wishtable__eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--rose);
-}
-.wishtable__title { font-size: 26px; margin: 10px 0 12px; }
-.wishtable__body {
-  font-size: 14px;
-  color: var(--mist);
-  line-height: 1.65;
-  max-width: 46ch;
-  margin: 0 auto;
-}
-.wishtable__count {
-  display: block;
-  margin-top: 22px;
-  font-style: italic;
-  font-size: 14px;
-  color: var(--gold);
-}
-.wishtable__fine {
-  margin-top: 10px;
-  font-size: 11.5px;
-  font-style: italic;
-  color: var(--mist-faint);
-  max-width: 44ch;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.wishes {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 28px auto 0;
-  max-width: 720px;
-  padding: 0;
-}
-
-/* Apothecary labels — cut corner, like a punched shop tag. */
-.trinket {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  padding: 16px 12px;
-  border: 1px solid var(--rule-soft);
-  background: rgba(13, 9, 24, 0.5);
-  clip-path: polygon(9px 0, 100% 0, 100% 100%, 0 100%, 0 9px);
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-.trinket.is-wished {
-  border-color: rgba(217, 196, 143, 0.5);
-  background: rgba(217, 196, 143, 0.09);
-}
-/* A wish the visitor typed, rather than one the shop offered. */
-.trinket.is-own { border-style: dashed; border-color: rgba(201, 143, 176, 0.5); }
-.trinket.is-own .trinket__glyph { color: var(--rose); }
-
-.trinket__glyph { font-size: 20px; line-height: 1; color: var(--gold); }
-.trinket__name { font-size: 12.5px; line-height: 1.4; color: var(--mist); }
-.trinket__tally { font-size: 10.5px; letter-spacing: 0.08em; color: var(--mist-faint); }
-
-.trinket__btn {
-  font-family: var(--voice);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-  background: none;
-  border: 1px solid var(--gilt-faint);
-  padding: 7px 14px;
-  cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease;
-}
-.trinket__btn:hover { background: rgba(217, 196, 143, 0.12); }
-.trinket.is-wished .trinket__btn { background: var(--gold); color: var(--ink); border-color: var(--gold); }
-
-.wishform { margin-top: 26px; }
-.wishform__label {
-  display: block;
-  font-size: 10.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mist-faint);
-  margin-bottom: 10px;
-}
-.wishform__row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-.wishform__input {
-  font-family: var(--voice);
-  font-size: 14px;
-  color: var(--mist);
-  padding: 14px 15px;
-  background: rgba(13, 9, 24, 0.62);
-  border: 1px solid var(--rule);
-  flex: 1 1 250px;
-  min-width: 0;
-  max-width: 340px;
-}
-.wishform__input::placeholder { color: var(--mist-faint); font-style: italic; }
-
-@media (min-width: 700px) {
-  .wishtable { padding: 72px 32px 48px; }
-  .wishes { grid-template-columns: repeat(3, 1fr); }
-  .wishtable__title { font-size: 34px; }
-}
-
-@media (min-width: 1024px) {
-}
-
-/* The real CTA — a full-width band, so the tonal shift lands */
-.cta {
-  background: #0a0614;
-  text-align: center;
-}
-.cta__eyebrow { font-style: italic; font-size: 13px; color: var(--moss); }
-.cta__title { font-size: clamp(22px, 3.4vw, 40px); margin: 12px 0 10px; }
-.cta__body {
-  font-size: 14px;
-  color: var(--mist);
-  line-height: 1.65;
-  max-width: 54ch;
-  margin: 0 auto;
-}
-/* The signature sits under the button, so the button label can be
-   a plain verb instead of doing credit duty as well. */
-.cta__sign {
-  margin-top: 18px;
-  font-family: var(--display);
-  font-size: 13px;
-  letter-spacing: 0.16em;
-  color: var(--mist-faint);
-}
-
-/* 7. SHELVES ------------------------------------------------ */
-/* Wrapped at every width, never a scrolling row.
-   These were horizontally scrollable with the scrollbar hidden,
-   which meant three of the six moods sat off-screen with nothing
-   indicating they existed. Six short pills wrap to two or three
-   rows on a phone — cheap vertical space in exchange for the
-   whole set being visible at once. */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;   /* tabs hang from a common head line */
-  justify-content: center;
-  gap: 8px;
-  padding: 4px 0 16px;
-}
-
-.stacks {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-/* Hidden by the mood filter — display:none so the grid reflows. */
-.stacks .book[hidden] { display: none; }
-
-.book__mood {
-  display: inline-block;
+.threshold__hint {
   margin-top: 12px;
-  font-size: 10.5px;
+
+  color: #82757e;
+
+  font-family: var(--serif);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.threshold__skip {
+  position: absolute;
+  z-index: 10;
+
+  right: 22px;
+  bottom: 18px;
+
+  background: none;
+  border: none;
+
+  color: #71656d;
+
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+
+/* ============================================================
+   7. NAV
+   ============================================================ */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  background: rgba(19, 14, 19, 0.94);
+
+  border-bottom: 1px solid var(--line-light);
+
+  backdrop-filter: blur(10px);
+}
+
+.nav__inner {
+  min-height: 66px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.nav__brand {
+  font-family: var(--serif);
+  font-size: 19px;
+
+  text-decoration: none;
+}
+
+.nav__links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav__links a {
+  color: var(--text-muted);
+
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--mist-faint);
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
 }
 
-.stacks__empty {
-  text-align: center;
-  font-style: italic;
-  color: var(--mist-faint);
-  padding: 40px 0;
-}
-.stacks__empty[hidden] { display: none; }
-
-.closing {
-  text-align: center;
-  font-style: italic;
-  color: var(--mist-dim);
-  font-size: 14px;
-  max-width: 48ch;
-  margin: 0 auto;
-}
-.closing--after { margin-top: 28px; }
-
-@media (min-width: 561px) {
-  .stacks { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 1024px) {
-  .stacks { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.nav__links a:hover {
+  color: var(--cream);
 }
 
-/* 8. SPOTLIGHT ---------------------------------------------- */
-.archive {
+
+/* ============================================================
+   8. INTRO
+   ============================================================ */
+
+.intro {
+  background: var(--ink);
+}
+
+.intro__grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  gap: clamp(48px, 8vw, 110px);
+
+  align-items: center;
 }
-.candle {
+
+.intro h1 {
+  max-width: 700px;
+
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: clamp(52px, 8vw, 105px);
+  font-weight: 400;
+  line-height: 0.91;
+  letter-spacing: -0.055em;
+}
+
+.intro h1 em {
+  color: var(--rose);
+  font-weight: 400;
+}
+
+.intro__lede {
+  max-width: 500px;
+
+  margin-top: 32px;
+
+  color: var(--text-muted);
+
+  font-size: 17px;
+}
+
+.intro__visual {
+  position: relative;
+}
+
+.intro__photo {
+  min-height: 480px;
+
+  position: relative;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(10, 7, 10, 0.02),
+      rgba(10, 7, 10, 0.4)
+    ),
+    url("../img/shop-detail.jpg"),
+    linear-gradient(
+      145deg,
+      #39272d,
+      #171116 70%
+    );
+
+  background-size: cover;
+  background-position: center;
+
+  border: 1px solid var(--line-light);
+}
+
+.intro__photo-note {
+  position: absolute;
+
+  left: -18px;
+  bottom: 35px;
+
+  width: min(320px, 80%);
+
+  padding: 20px;
+
+  background: var(--paper);
+
+  color: var(--text-dark);
+
+  transform: rotate(-1.6deg);
+
+  box-shadow: 12px 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.intro__photo-note span {
   display: block;
-  padding: 18px;
-  background: var(--ink-3);
-  border-radius: var(--radius);
-  border: 0.5px solid var(--rule);
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.15s ease, border-color 0.2s ease;
-}
-.candle:hover { transform: translateY(-2px); border-color: rgba(217, 196, 143, 0.4); }
-.candle__moon {
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
+
+  margin-bottom: 12px;
+
+  color: var(--text-dark-muted);
+
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--gold);
-}
-.candle__name { font-size: 20px; margin: 8px 0 3px; }
-.candle__book { font-style: italic; font-size: 13px; color: var(--mist-dim); }
-
-@media (min-width: 561px) {
-  .archive { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 1024px) {
-  .archive { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .candle { padding: 26px; }
 }
 
-/* The submission call — the block that makes a social post convert */
-.submit {
-  text-align: center;
-  padding: 36px 24px;
-  border: 1px solid rgba(217, 196, 143, 0.4);
-  background: var(--laid), linear-gradient(160deg, var(--gold-deep), #0a0614);
-  box-shadow: inset 0 0 0 5px transparent, inset 0 0 0 6px var(--gilt-faint);
-}
-.submit__title { font-size: 26px; margin-bottom: 10px; }
-.submit__body {
-  font-size: 14px;
-  color: var(--mist);
-  line-height: 1.65;
-  max-width: 50ch;
-  margin: 0 auto;
+.intro__photo-note strong {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.25;
 }
 
-@media (min-width: 1024px) {
-  .submit { padding: 56px 32px; }
-  .submit__title { font-size: 36px; }
+.intro__caption {
+  margin-top: 13px;
+
+  color: #7f727b;
+
+  font-size: 11px;
 }
 
-/* One author's page. Mirrored from the archive card — portrait
-   right, words left — so the two don't read as the same template. */
-.backlink {
-  display: inline-block;
-  font-size: 13px;
-  color: var(--mist-faint);
-  text-decoration: none;
-  padding: 20px 0 0;
-}
-.backlink:hover { color: var(--mist); }
 
-.author {
+/* ============================================================
+   9. BROWSE
+   ============================================================ */
+
+.mood-tabs {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  padding-bottom: 40px;
+}
+
+.mood-tab {
+  padding: 10px 0;
+
+  margin-right: 22px;
+
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid transparent;
+
+  color: #7b7073;
+
+  font-family: var(--serif);
+  font-size: 16px;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.mood-tab:hover {
+  color: var(--text-dark);
+}
+
+.mood-tab.is-active {
+  color: var(--text-dark);
+  border-bottom-color: var(--text-dark);
+}
+
+.book-grid {
   display: grid;
-  gap: 24px;
-  padding: 8px 0 0;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 18px;
 }
-.author__portrait {
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius);
+
+.book-card {
+  position: relative;
+
+  min-height: 330px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 25px;
+
+  color: var(--cream);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow: 0 22px 40px rgba(49, 38, 41, 0.18);
+}
+
+.book-card--rose {
+  background: #513240;
+}
+
+.book-card--moss {
+  background: #4b5546;
+}
+
+.book-card--gold {
+  background: #625139;
+}
+
+.book-card--plum {
+  background: #37273c;
+}
+
+.book-card__number {
+  color: rgba(255, 255, 255, 0.5);
+
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.book-card__middle {
+  margin-block: 55px 30px;
+}
+
+.book-card h3 {
+  max-width: 250px;
+
+  font-family: var(--serif);
+  font-size: clamp(27px, 3vw, 42px);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.book-card__author {
+  margin-top: 10px;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.book-card__comment {
+  max-width: 260px;
+
+  padding-top: 16px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+
+  color: rgba(255, 255, 255, 0.78);
+
+  opacity: 0;
+
+  transform: translateY(8px);
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.book-card:hover .book-card__comment,
+.book-card:focus-within .book-card__comment {
+  opacity: 1;
+  transform: none;
+}
+
+.browse__footer {
+  margin-top: 30px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid var(--line-dark);
+}
+
+.browse__footer p {
+  color: var(--text-dark-muted);
+
+  font-family: var(--serif);
+  font-size: 13px;
+  font-style: italic;
+}
+
+
+/* ============================================================
+   10. INTERLUDE
+   ============================================================ */
+
+.interlude {
+  padding-block: clamp(80px, 11vw, 150px);
+
+  background: var(--wine);
+
+  text-align: center;
+}
+
+.interlude__inner {
+  max-width: 820px;
+}
+
+.interlude p {
+  color: rgba(247, 241, 232, 0.7);
+
+  font-family: var(--serif);
+  font-size: clamp(26px, 4vw, 45px);
+  font-style: italic;
+}
+
+.interlude strong {
+  display: block;
+
+  margin-top: 20px;
+
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 400;
+  line-height: 1;
+}
+
+
+/* ============================================================
+   11. INDIE AUTHOR
+   ============================================================ */
+
+.indie {
+  background: var(--ink-soft);
+}
+
+.author-feature {
+  display: grid;
+  gap: clamp(38px, 7vw, 85px);
+
+  align-items: center;
+}
+
+.author-feature__art {
+  position: relative;
+
+  min-height: 570px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--line-light);
+
+  transition: background 0.45s ease;
+}
+
+.tone-plum {
+  background: #352339;
+}
+
+.tone-moss {
+  background: #394338;
+}
+
+.tone-wine {
+  background: #4a2832;
+}
+
+.author-feature__moon {
+  position: absolute;
+
+  width: 260px;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+
+  left: 50%;
+  top: 33%;
+
+  transform: translate(-50%, -50%);
+
+  background: #d9cda9;
+
+  opacity: 0.7;
+}
+
+.author-feature__book {
+  position: absolute;
+
+  width: 210px;
+  height: 320px;
+
+  left: 50%;
+  bottom: 65px;
+
+  transform:
+    translateX(-50%)
+    rotate(-3deg);
+
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(ellipse at 50% 35%, rgba(201,143,176,0.18), transparent 65%),
-    linear-gradient(160deg, var(--rose-deep), var(--ink));
-  border: 0.5px solid rgba(201, 143, 176, 0.25);
+
+  padding: 28px;
+
+  text-align: center;
+
+  background: #1b141a;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow: 18px 23px 40px rgba(0, 0, 0, 0.35);
+
+  transition:
+    transform 0.35s ease;
 }
-.author__portrait svg { display: block; width: 100%; height: 100%; }
-.author__moon {
-  font-size: 10.5px;
+
+.author-feature__art:hover .author-feature__book {
+  transform:
+    translateX(-50%)
+    rotate(1deg)
+    translateY(-8px);
+}
+
+.author-feature__book span {
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.author-feature__issue {
+  position: absolute;
+
+  right: 20px;
+  bottom: 18px;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.author-feature__label {
+  color: var(--gold);
+
+  font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
-}
-.author__name { font-size: clamp(32px, 5vw, 56px); margin: 10px 0 8px; }
-.author__book { font-style: italic; font-size: 16px; color: var(--mist-dim); }
-
-@media (min-width: 700px) {
-  .author { grid-template-columns: 1fr 260px; align-items: center; gap: 40px; }
-  /* portrait to the right of the words */
-  .author__portrait { order: 2; }
-}
-@media (min-width: 1024px) {
-  .author { grid-template-columns: 1fr 340px; gap: 64px; }
 }
 
-/* The pull quote — this is the screenshot. Give it real room. */
-.pullquote {
-  text-align: center;
-  background: linear-gradient(180deg, transparent, rgba(217,196,143,0.05), transparent);
+.author-feature__copy h3 {
+  margin-top: 10px;
+
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 400;
+  line-height: 0.96;
 }
-.pullquote__text {
-  font-family: var(--display);
-  font-size: clamp(22px, 3.6vw, 42px);
-  line-height: 1.3;
-  color: var(--gold);
-  max-width: 22ch;
-  margin: 0 auto;
-  text-wrap: balance;
-}
-.pullquote__attr {
+
+.author-feature__title {
+  margin-top: 12px;
+
+  color: var(--rose);
+
+  font-family: var(--serif);
+  font-size: 22px;
   font-style: italic;
-  font-size: 13px;
-  color: var(--mist-faint);
-  margin-top: 20px;
 }
 
-/* The interview itself — single column at a reading measure. */
-.qa { max-width: var(--measure); }
-.qa__q {
-  font-family: var(--voice);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--moss);
-  font-weight: 600;
-}
-.qa__a { font-size: 15px; line-height: 1.75; color: var(--mist); margin-top: 8px; }
-.qa__pair + .qa__pair { margin-top: 32px; }
+.author-feature__description {
+  max-width: 560px;
 
-.find {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-.find__link {
-  display: block;
-  padding: 16px 18px;
-  border-radius: var(--radius);
-  background: var(--moss-deep);
-  border: 0.5px solid rgba(143, 174, 125, 0.4);
-  color: #dcecd8;
-  text-decoration: none;
-  transition: transform 0.15s ease;
-}
-.find__link:hover { transform: translateY(-2px); }
-.find__label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--moss); }
-.find__value { font-size: 15px; margin-top: 4px; color: #eaf3e7; }
+  margin-top: 28px;
 
-@media (min-width: 561px) {
-  .find { grid-template-columns: repeat(3, 1fr); }
+  color: var(--text-muted);
+
+  font-size: 15px;
+  line-height: 1.75;
 }
 
-/* prev / next, edge to edge */
-.updown {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  border-top: 1px solid var(--rule-soft);
-  padding-top: 28px;
-}
-.updown__link {
-  padding: 18px;
-  border-radius: var(--radius);
-  background: var(--ink-3);
-  text-decoration: none;
-  color: inherit;
-  border: 0.5px solid var(--rule-soft);
-}
-.updown__link:hover { border-color: var(--rule); }
-.updown__dir { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist-faint); }
-.updown__name { font-family: var(--display); font-size: 18px; color: var(--parchment); margin-top: 6px; }
-.updown__link--next { text-align: right; }
+.author-feature blockquote {
+  max-width: 580px;
 
-@media (min-width: 561px) {
-  .updown { grid-template-columns: 1fr 1fr; }
-}
-/* 9. PORTFOLIO ---------------------------------------------- */
-/* Plain voice for a different reader — no in-world copy here. */
-.case { display: grid; gap: 24px; }
+  margin-top: 30px;
+  padding-left: 22px;
 
-.case__split {
-  display: grid;
-  gap: 24px;
-  align-items: start;
+  border-left: 1px solid var(--gold);
+
+  color: var(--text-light);
+
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.6vw, 30px);
+  line-height: 1.4;
 }
 
-.case__demo {
-  aspect-ratio: 4 / 3;
-  border: 1px solid var(--rule);
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 24px;
-  background: radial-gradient(ellipse at 50% 45%, #241640 0%, #140e28 55%, #0a0614 100%);
-}
-.case__demo-note { font-style: italic; font-size: 13px; color: var(--mist-faint); }
-
-@media (min-width: 1024px) {
-  .case__split { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-}
-
-.notes-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-.note-card {
-  padding: 20px;
-  border-radius: var(--radius);
-  background: var(--ink-3);
-  border: 0.5px solid var(--rule-soft);
-}
-.note-card__title { font-size: 18px; margin-bottom: 8px; }
-.note-card__body { font-size: 14px; color: var(--mist-dim); line-height: 1.65; }
-
-@media (min-width: 561px) {
-  .notes-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 1024px) {
-  .notes-grid { gap: 20px; }
-  .note-card { padding: 28px; }
-}
-
-.stack-list {
+.author-feature__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  list-style: none;
-}
-.stack-list li {
-  font-size: 12.5px;
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  border: 0.5px solid rgba(143, 174, 125, 0.4);
-  background: var(--moss-deep);
-  color: #dcecd8;
-}
 
-/* 10. SHARED COMPONENTS ------------------------------------- */
-/* Foil stamping. Squared, letterspaced caps, with a rule set in
-   from the edge — the way a title is blocked onto a hardcover. */
-.btn {
-  display: inline-block;
-  font-family: var(--voice);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  margin-top: 26px;
+
+  color: #796e76;
+
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: none;
-  padding: 15px 34px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-.btn:hover { filter: brightness(1.08); }
-.btn:active { transform: translateY(1px); }
-
-.btn--gold {
-  background: var(--gold);
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--gold), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
-}
-.btn--moss {
-  background: var(--moss);
-  color: var(--ink);
-  letter-spacing: 0.16em;
-  padding: 13px 28px;
-  margin-top: 18px;
-  box-shadow: inset 0 0 0 1px var(--moss), inset 0 0 0 2px rgba(13, 9, 24, 0.42);
 }
 
-/* Blind-stamped rather than foiled — the secondary of a pair. */
-.btn--ghost {
-  background: transparent;
+
+/* ============================================================
+   12. WISHING TABLE
+   ============================================================ */
+
+.wishing__wrap {
+  display: grid;
+  gap: clamp(50px, 7vw, 95px);
+}
+
+.wishing__intro h2 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 78px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.wishing__intro > p:last-child {
+  max-width: 400px;
+
+  margin-top: 24px;
+
+  color: var(--text-dark-muted);
+}
+
+.wish-panel {
+  border-top: 1px solid var(--line-dark);
+}
+
+.wish-options {
+  display: grid;
+}
+
+.wish-card {
+  min-height: 150px;
+
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  grid-template-rows: auto auto;
+
+  align-items: center;
+
+  column-gap: 24px;
+
+  padding: 24px 4px;
+
+  text-align: left;
+
+  background: none;
+
+  border: 0;
+  border-bottom: 1px solid var(--line-dark);
+
+  color: var(--text-dark);
+
+  transition:
+    padding-left 0.25s ease,
+    background 0.25s ease;
+}
+
+.wish-card:hover {
+  padding-left: 16px;
+}
+
+.wish-card.is-selected {
+  padding-left: 16px;
+  background: rgba(72, 51, 60, 0.07);
+}
+
+.wish-card__number {
+  grid-row: 1 / 3;
+
+  color: #928486;
+
+  font-size: 10px;
+  letter-spacing: 0.15em;
+}
+
+.wish-card strong {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.wish-card > span:last-child {
+  color: var(--text-dark-muted);
+
+  font-size: 12px;
+}
+
+.wish-form {
+  margin-top: 40px;
+}
+
+.wish-form label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: var(--text-dark-muted);
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.wish-form__row {
+  display: flex;
+}
+
+.wish-form input {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 15px 16px;
+
+  color: var(--text-dark);
+
+  background: rgba(255, 255, 255, 0.25);
+
+  border: 1px solid var(--line-dark);
+  border-right: 0;
+
+  outline: 0;
+}
+
+.wish-form input:focus {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.wish-result {
+  margin-top: 28px;
+
+  padding: 25px;
+
+  background: var(--ink);
+
+  color: var(--cream);
+}
+
+.wish-result span {
+  display: block;
+
   color: var(--gold);
-  box-shadow:
-    inset 0 0 0 1px rgba(217, 196, 143, 0.55),
-    inset 0 0 0 4px rgba(217, 196, 143, 0.16);
-}
-.btn--ghost:hover { background: rgba(217, 196, 143, 0.08); }
 
-/* A single spine. Latin text set vertical-rl reads top-to-bottom,
-   which is how spines are printed in English-language publishing. */
-.shelf {
-  position: relative;
-  flex: 0 0 auto;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  /* Tall enough that the longest label — "fae courts, bad
-     decisions", 25 characters — sets on one line. Too short and it
-     wraps to a second vertical column, which widens that one spine
-     into a visibly fatter book than its neighbours. A longer mood
-     added later still degrades gracefully: it just becomes a
-     thicker volume. */
-  height: 252px;
-  padding: 18px 11px;
-  font-family: var(--display);
-  font-size: 12.5px;
-  letter-spacing: 0.09em;
-  line-height: 1.3;
-  color: #eddcf0;
-  text-decoration: none;
-  cursor: pointer;
-  border: 1px solid;
-  border-bottom: none;         /* it's standing on the rail */
-  box-shadow:
-    inset -3px 0 6px rgba(0, 0, 0, 0.45),   /* rounded-over spine */
-    inset 2px 0 0 rgba(255, 255, 255, 0.06);
-  transition: transform 0.22s ease, filter 0.22s ease;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-/* gilt bands near head and tail, like a stamped hardcover */
-.shelf::before,
-.shelf::after {
-  content: '';
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  height: 1px;
-  background: var(--gilt);
-}
-.shelf::before { top: 11px; }
-.shelf::after  { bottom: 11px; }
+.wish-result strong {
+  display: block;
 
-/* tip it up out of the row, the way you'd pull one with a finger */
-.shelf:hover,
-.shelf:focus-visible {
-  transform: translateY(-9px);
-  filter: brightness(1.12);
+  margin-top: 7px;
+
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 400;
 }
 
-/* no two books on a shelf are the same height */
-.shelf:nth-child(2n) { height: 268px; }
-.shelf:nth-child(3n) { height: 258px; }
-.shelf:nth-child(5n) { height: 262px; }
 
-.shelf--rose { background: linear-gradient(90deg, #2d1b4d, var(--twilight)); border-color: rgba(201, 143, 176, 0.45); }
-.shelf--moss { background: linear-gradient(90deg, #16291f, var(--moss-deep)); border-color: rgba(143, 174, 125, 0.45); color: #dcecd8; }
-.shelf--gold { background: linear-gradient(90deg, #241c11, var(--gold-deep)); border-color: rgba(217, 196, 143, 0.45); color: #ecdcb0; }
+/* ============================================================
+   13. SAGEWAVE REVEAL
+   ============================================================ */
 
-/* BOOKMARK TABS — the shelves-page mood filter.
-   A filter that marks your place in a set is a bookmark, so it's
-   shaped like one: squared head, notched tail. The shape is a
-   clip-path, which crops the side borders at the notch, so these
-   are filled rather than outlined. */
-.tab {
-  position: relative;
-  flex: 0 0 auto;
-  font-family: var(--voice);
-  font-size: 12.5px;
-  letter-spacing: 0.05em;
-  color: #eddcf0;
-  padding: 11px 16px 19px;
-  background: var(--twilight);
-  border: none;
-  border-top: 2px solid var(--mist-faint);
-  cursor: pointer;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%);
-  transition: transform 0.16s ease, background 0.2s ease;
-}
-.tab:hover { transform: translateY(-3px); }
-
-.tab--rose { border-top-color: var(--rose); }
-.tab--moss { border-top-color: var(--moss); background: var(--moss-deep); color: #dcecd8; }
-.tab--gold { border-top-color: var(--gold); background: var(--gold-deep); color: #ecdcb0; }
-
-/* Selected. No font-weight change — that would resize the tab and
-   reshuffle the wrapped rows on every click. */
-.tab[aria-pressed="true"] {
-  background: var(--gold);
-  border-top-color: var(--parchment);
-  color: var(--ink);
+.reveal-section {
+  background: var(--ink);
 }
 
-/* 11. MOTION ------------------------------------------------ */
-.fade-in { opacity: 0; transition: opacity 0.7s ease; }
-.fade-in.is-in { opacity: 1; }
+.reveal-section__inner {
+  max-width: 980px;
+}
+
+.reveal-section h2 {
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: clamp(55px, 9vw, 112px);
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+}
+
+.reveal-section h2 em {
+  color: var(--rose);
+  font-weight: 400;
+}
+
+.reveal-section__body {
+  max-width: 610px;
+
+  margin-top: 42px;
+
+  color: var(--text-muted);
+
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.reveal-section__signature {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  margin-top: 60px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid var(--line-light);
+}
+
+.reveal-section__signature span {
+  color: #756a72;
+
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.reveal-section__signature strong {
+  color: var(--cream);
+
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+
+/* ============================================================
+   14. FOOTER
+   ============================================================ */
+
+.footer {
+  background: #0c090c;
+
+  border-top: 1px solid var(--line-light);
+
+  padding-block: 30px;
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.footer p,
+.footer a {
+  color: #70666d;
+
+  font-size: 10px;
+}
+
+.footer > .wrap > p:first-child {
+  color: #aaa0a7;
+  font-family: var(--serif);
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   15. DESKTOP
+   ============================================================ */
+
+@media (min-width: 760px) {
+
+  .section-heading__split {
+    grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.6fr);
+    align-items: end;
+  }
+
+  .intro__grid {
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .author-feature {
+    grid-template-columns: 0.85fr 1.15fr;
+  }
+
+  .wishing__wrap {
+    grid-template-columns: 0.75fr 1.25fr;
+    align-items: start;
+  }
+
+}
+
+
+/* ============================================================
+   16. MOBILE
+   ============================================================ */
+
+@media (max-width: 759px) {
+
+  .nav__links {
+    display: none;
+  }
+
+  .intro__photo {
+    min-height: 420px;
+  }
+
+  .intro__photo-note {
+    left: 14px;
+  }
+
+  .book-card {
+    min-height: 285px;
+  }
+
+  .book-card__comment {
+    opacity: 1;
+    transform: none;
+  }
+
+  .author-feature__art {
+    min-height: 500px;
+  }
+
+  .wish-form__row {
+    flex-direction: column;
+  }
+
+  .wish-form input {
+    border-right: 1px solid var(--line-dark);
+    border-bottom: 0;
+  }
+
+  .wish-form .button {
+    width: 100%;
+  }
+
+}
+
+
+/* ============================================================
+   17. REDUCED MOTION
+   ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .door__half,
-  .door__glow,
-  .threshold__parted,
-  .fade-in,
-  .btn,
-  .shelf,
-  .tab,
-  .book,
-  .signpost,
-  .candle,
-  .prop,
-  .find__link,
-  .sitenav__menu,
-  .sitenav__bar,
-  .sitenav__link { transition: none !important; }
-  .sitenav__menu .sitenav__link { opacity: 1; transform: none; }
-  /* the fox lies still */
-  .fox__svg { animation: none !important; }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
 }
