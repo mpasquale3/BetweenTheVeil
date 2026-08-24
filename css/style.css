@@ -85,6 +85,18 @@ img {
   max-width: 100%;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 ::selection {
   background: var(--rose);
   color: var(--cream);
@@ -102,6 +114,10 @@ html.is-gated body {
 
 html.is-gated .site-shell {
   display: none;
+}
+
+html.is-gated.is-crossing .site-shell {
+  display: block;
 }
 
 html.has-entered .threshold {
@@ -267,7 +283,9 @@ html.has-entered .threshold {
    ============================================================ */
 
 .threshold {
-  position: relative;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
 
   min-height: 100vh;
   min-height: 100svh;
@@ -289,6 +307,17 @@ html.has-entered .threshold {
       rgba(10, 7, 10, 0.88)
     ),
     #130e13;
+
+  opacity: 1;
+  transition:
+    opacity 0.7s ease,
+    transform 0.9s var(--ease);
+}
+
+html.is-crossing .threshold {
+  opacity: 0;
+  transform: scale(1.018);
+  pointer-events: none;
 }
 
 .threshold__wash {
@@ -353,28 +382,30 @@ html.has-entered .threshold {
 .door__light {
   position: absolute;
 
-  inset: 4% 14% 0;
+  inset: 0;
 
   background:
-    radial-gradient(
-      ellipse at center,
-      rgba(255, 220, 153, 0.95),
-      rgba(194, 122, 65, 0.48) 42%,
-      transparent 72%
-    );
+    linear-gradient(
+      rgba(13, 9, 20, 0.08),
+      rgba(13, 9, 20, 0.2)
+    ),
+    url("../img/faerie-bookshop-threshold.png") center / cover no-repeat;
 
-  opacity: 0.15;
+  opacity: 0.72;
 
   transition:
-    opacity 1.4s ease,
-    transform 1.4s ease;
+    opacity 1.5s ease,
+    transform 2.15s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 1.5s ease;
 
-  transform: scaleX(0.35);
+  transform: scale(1.01);
+  filter: brightness(0.68) saturate(0.82);
 }
 
 .door.is-opening .door__light {
-  opacity: 0.95;
-  transform: scaleX(1.2);
+  opacity: 1;
+  transform: scale(1.14);
+  filter: brightness(1) saturate(1.08);
 }
 
 .door__half {
@@ -495,7 +526,7 @@ html.has-entered .threshold {
 }
 
 .nav__inner {
-  min-height: 66px;
+  min-height: 76px;
 
   display: flex;
   align-items: center;
@@ -505,10 +536,15 @@ html.has-entered .threshold {
 }
 
 .nav__brand {
-  font-family: var(--serif);
-  font-size: 19px;
-
+  display: flex;
+  align-items: center;
   text-decoration: none;
+}
+
+.nav__brand img {
+  display: block;
+  width: clamp(200px, 24vw, 270px);
+  height: auto;
 }
 
 .nav__links {
@@ -560,9 +596,9 @@ html.has-entered .threshold {
   letter-spacing: -0.055em;
 }
 
-.intro h1 em {
+.heading-accent {
   color: var(--rose);
-  font-weight: 400;
+  font-style: normal;
 }
 
 .intro__lede {
@@ -590,7 +626,7 @@ html.has-entered .threshold {
       rgba(10, 7, 10, 0.02),
       rgba(10, 7, 10, 0.4)
     ),
-    url("../img/shop-detail.jpg"),
+    url("../img/hero-faerie-fox.png"),
     linear-gradient(
       145deg,
       #39272d,
@@ -598,7 +634,7 @@ html.has-entered .threshold {
     );
 
   background-size: cover;
-  background-position: center;
+  background-position: center 42%;
 
   border: 1px solid var(--line-light);
 }
@@ -610,6 +646,8 @@ html.has-entered .threshold {
   bottom: 35px;
 
   width: min(320px, 80%);
+  display: flex;
+  flex-direction: column;
 
   padding: 20px;
 
@@ -622,7 +660,7 @@ html.has-entered .threshold {
   box-shadow: 12px 20px 50px rgba(0, 0, 0, 0.3);
 }
 
-.intro__photo-note span {
+.intro__photo-note > span {
   display: block;
 
   margin-bottom: 12px;
@@ -636,10 +674,37 @@ html.has-entered .threshold {
 }
 
 .intro__photo-note strong {
+  display: block;
+
   font-family: var(--serif);
   font-size: 21px;
   font-weight: 500;
   line-height: 1.25;
+}
+
+.intro__recommendation-next {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: 18px;
+  padding: 0 0 3px;
+  color: var(--wine);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(70, 36, 47, 0.35);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.intro__recommendation-next span {
+  transition: transform 0.2s ease;
+}
+
+.intro__recommendation-next:hover span {
+  transform: translateX(4px);
 }
 
 .intro__caption {
@@ -741,15 +806,8 @@ html.has-entered .threshold {
   background: #37273c;
 }
 
-.book-card__number {
-  color: rgba(255, 255, 255, 0.5);
-
-  font-size: 10px;
-  letter-spacing: 0.16em;
-}
-
 .book-card__middle {
-  margin-block: 55px 30px;
+  margin-block: 30px;
 }
 
 .book-card h3 {
@@ -799,23 +857,6 @@ html.has-entered .threshold {
   transform: none;
 }
 
-.browse__footer {
-  margin-top: 30px;
-
-  padding-top: 18px;
-
-  border-top: 1px solid var(--line-dark);
-}
-
-.browse__footer p {
-  color: var(--text-dark-muted);
-
-  font-family: var(--serif);
-  font-size: 13px;
-  font-style: italic;
-}
-
-
 /* ============================================================
    10. INTERLUDE
    ============================================================ */
@@ -851,6 +892,29 @@ html.has-entered .threshold {
   font-size: clamp(38px, 6vw, 72px);
   font-weight: 400;
   line-height: 1;
+}
+
+.interlude__cta {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 34px;
+  padding-bottom: 5px;
+  color: var(--gold);
+  border-bottom: 1px solid rgba(185, 155, 103, 0.45);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.interlude__cta span {
+  transition: transform 0.2s ease;
+}
+
+.interlude__cta:hover span {
+  transform: translateX(5px);
 }
 
 
@@ -911,8 +975,42 @@ html.has-entered .threshold {
   opacity: 0.7;
 }
 
+.author-feature__cameo {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 54px;
+  width: 245px;
+  height: 340px;
+  transform: translateX(-50%);
+  opacity: 0.82;
+  transition:
+    transform 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.author-feature__cameo svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: rgba(20, 13, 22, 0.94);
+}
+
+.author-feature__cameo-detail {
+  fill: rgba(217, 205, 169, 0.18);
+}
+
+.cameo-tova {
+  transform: translateX(-50%) scaleX(-1) rotate(-2deg);
+}
+
+.cameo-idris {
+  transform: translateX(-50%) scale(1.06) rotate(2deg);
+}
+
 .author-feature__book {
   position: absolute;
+  z-index: 2;
 
   width: 210px;
   height: 320px;
@@ -1057,12 +1155,21 @@ html.has-entered .threshold {
   letter-spacing: -0.04em;
 }
 
-.wishing__intro > p:last-child {
+.wishing__body {
   max-width: 400px;
 
   margin-top: 24px;
 
   color: var(--text-dark-muted);
+}
+
+.wishing__intro .wishing__count {
+  margin-top: 28px;
+  color: var(--wine);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .wish-panel {
@@ -1074,60 +1181,90 @@ html.has-entered .threshold {
 }
 
 .wish-card {
-  min-height: 150px;
-
-  display: grid;
-  grid-template-columns: 45px 1fr;
-  grid-template-rows: auto auto;
-
-  align-items: center;
-
-  column-gap: 24px;
-
-  padding: 24px 4px;
-
-  text-align: left;
-
-  background: none;
-
-  border: 0;
+  position: relative;
   border-bottom: 1px solid var(--line-dark);
-
-  color: var(--text-dark);
-
-  transition:
-    padding-left 0.25s ease,
-    background 0.25s ease;
+  transition: background 0.25s ease;
 }
 
 .wish-card:hover {
-  padding-left: 16px;
+  background: rgba(72, 51, 60, 0.035);
 }
 
 .wish-card.is-selected {
-  padding-left: 16px;
   background: rgba(72, 51, 60, 0.07);
 }
 
-.wish-card__number {
-  grid-row: 1 / 3;
-
-  color: #928486;
-
-  font-size: 10px;
-  letter-spacing: 0.15em;
+.wish-card__choice {
+  width: 100%;
+  min-height: 150px;
+  display: grid;
+  grid-template-columns: 45px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 4px;
+  color: var(--text-dark);
+  text-align: left;
+  background: none;
+  border: 0;
+  transition: padding-left 0.25s ease;
 }
 
-.wish-card strong {
+.wish-card__choice:hover,
+.wish-card__choice:focus-visible {
+  padding-left: 16px;
+}
+
+.wish-card__symbol {
+  color: var(--rose);
+
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1;
+  text-align: center;
+}
+
+.wish-card__copy {
+  display: grid;
+  gap: 4px;
+}
+
+.wish-card__copy strong {
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 500;
 }
 
-.wish-card > span:last-child {
+.wish-card__copy > span {
   color: var(--text-dark-muted);
-
   font-size: 12px;
+}
+
+.wish-card__vote {
+  color: var(--wine);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.wish-card.is-selected .wish-card__vote {
+  color: var(--moss);
+}
+
+.wish-card__remove {
+  position: absolute;
+  right: 4px;
+  bottom: 10px;
+  padding: 3px 0;
+  color: var(--text-dark-muted);
+  background: none;
+  border: 0;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-transform: uppercase;
 }
 
 .wish-form {
@@ -1204,7 +1341,7 @@ html.has-entered .threshold {
 
 
 /* ============================================================
-   13. SAGEWAVE REVEAL
+   13. Sagewave reveal
    ============================================================ */
 
 .reveal-section {
@@ -1223,11 +1360,6 @@ html.has-entered .threshold {
   font-weight: 400;
   line-height: 0.88;
   letter-spacing: -0.055em;
-}
-
-.reveal-section h2 em {
-  color: var(--rose);
-  font-weight: 400;
 }
 
 .reveal-section__body {
@@ -1292,19 +1424,23 @@ html.has-entered .threshold {
   gap: 16px;
 }
 
+.footer__brand {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.footer__brand img {
+  display: block;
+  width: 132px;
+  height: auto;
+}
+
 .footer p,
 .footer a {
   color: #70666d;
 
   font-size: 10px;
 }
-
-.footer > .wrap > p:first-child {
-  color: #aaa0a7;
-  font-family: var(--serif);
-  font-size: 14px;
-}
-
 
 /* ============================================================
    15. DESKTOP
@@ -1370,6 +1506,16 @@ html.has-entered .threshold {
 
   .wish-form__row {
     flex-direction: column;
+  }
+
+  .wish-card__choice {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .wish-card__vote {
+    grid-column: 2;
+    text-align: left;
   }
 
   .wish-form input {

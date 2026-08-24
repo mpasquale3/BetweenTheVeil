@@ -145,7 +145,7 @@
     requestAnimationFrame(function () { shop.classList.add('is-in'); });
   }
 
-  /* 4. SAGEWAVE HOOK ----------------------------------------- */
+  /* 4. Sagewave hook ----------------------------------------- */
   function bindHook() {
     var cta = document.getElementById('ctaBtn');
     if (!cta) return;

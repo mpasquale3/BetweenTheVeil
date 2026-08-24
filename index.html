@@ -12,7 +12,7 @@
 
   <meta
     name="description"
-    content="Between the Veil is an imaginary independent bookshop concept designed by SageWave Web Design."
+    content="Between the Veil is an imaginary independent bookshop concept designed by Sagewave Web Design."
   />
 
   <!-- Fonts -->
@@ -125,7 +125,10 @@
       <div class="nav__inner wrap">
 
         <a class="nav__brand" href="#top">
-          Between the Veil
+          <img
+            src="between-the-veil-horizontal-logo.svg"
+            alt="Between the Veil"
+          />
         </a>
 
         <nav class="nav__links" aria-label="Main navigation">
@@ -158,7 +161,7 @@
             <h1>
               Not all readers
               <br />
-              shop by <em>genre.</em>
+              shop by <span class="heading-accent">genre.</span>
             </h1>
 
             <p class="intro__lede">
@@ -176,16 +179,31 @@
 
           <div class="intro__visual reveal">
 
-            <div class="intro__photo">
+            <div
+              class="intro__photo"
+            >
+
+              <span class="sr-only">
+                A sleeping red fox curled among old books, candles,
+                moss, and glowing mushrooms in a moonlit faerie bookshop.
+              </span>
 
               <div class="intro__photo-note">
                 <span>Tonight's recommendation</span>
 
-                <strong>
+                <strong id="recommendationText" aria-live="polite">
                   something romantic,
                   dangerous,
                   and objectively a bad idea
                 </strong>
+
+                <button
+                  class="intro__recommendation-next"
+                  id="nextRecommendation"
+                  type="button"
+                >
+                  another omen <span aria-hidden="true">→</span>
+                </button>
               </div>
 
             </div>
@@ -293,15 +311,6 @@
             aria-live="polite"
           ></div>
 
-
-          <div class="browse__footer reveal">
-
-            <p id="shelfNote">
-              currently pulling from the enemies-to-lovers shelf
-            </p>
-
-          </div>
-
         </div>
 
       </section>
@@ -323,6 +332,11 @@
             You have said this before.
             It has never been true.
           </strong>
+
+          <a class="interlude__cta" href="#browse">
+            find the book that proves you wrong
+            <span aria-hidden="true">→</span>
+          </a>
 
         </div>
 
@@ -373,6 +387,13 @@
 
               <div class="author-feature__moon"></div>
 
+              <div class="author-feature__cameo cameo-wren" id="authorCameo">
+                <svg viewBox="0 0 220 300" aria-hidden="true">
+                  <path d="M116 30c36 0 61 29 61 68 0 25-10 45-28 61 2 19 13 33 31 44 22 13 35 35 40 67H0c6-34 20-56 43-69 20-11 32-27 34-48-14-15-22-34-22-55 0-39 25-68 61-68Z" />
+                  <path class="author-feature__cameo-detail" d="M62 83c17-35 48-49 84-39 25 7 39 27 43 52-18-15-38-21-60-20-27 2-48 5-67 7Z" />
+                </svg>
+              </div>
+
               <div class="author-feature__book">
 
                 <span id="authorBookSmall">
@@ -381,8 +402,8 @@
 
               </div>
 
-              <span class="author-feature__issue">
-                indie shelf / 01
+              <span class="author-feature__issue" id="authorIssue">
+                indie shelf / 08
               </span>
 
             </div>
@@ -392,8 +413,8 @@
 
             <div class="author-feature__copy">
 
-              <p class="author-feature__label">
-                this month's find
+              <p class="author-feature__label" id="authorMonth">
+                this month's find · august
               </p>
 
               <h3 id="authorName">
@@ -431,6 +452,12 @@
 
                 <span id="authorYear">
                   self-published, 2025
+                </span>
+
+                <span aria-hidden="true">·</span>
+
+                <span>
+                  fictional concept feature
                 </span>
 
               </div>
@@ -476,9 +503,13 @@
               the shop carry next?
             </h2>
 
-            <p>
-              Tap one, or leave your own request.
-              No mystical council approval required.
+            <p class="wishing__body">
+              Vote for everything you really want, or add a wish of
+              your own. Your choices stay here when you return.
+            </p>
+
+            <p class="wishing__count" id="wishCount" aria-live="polite">
+              no wishes made yet
             </p>
 
           </div>
@@ -489,73 +520,8 @@
             <div
               class="wish-options"
               id="wishOptions"
-              role="group"
               aria-label="Wish for a product"
-            >
-
-              <button
-                class="wish-card"
-                type="button"
-                data-wish="annotation tabs in six moods"
-              >
-
-                <span class="wish-card__number">
-                  01
-                </span>
-
-                <strong>
-                  annotation tabs
-                </strong>
-
-                <span>
-                  in six moods
-                </span>
-
-              </button>
-
-
-              <button
-                class="wish-card"
-                type="button"
-                data-wish="a candle for staying up irresponsibly late"
-              >
-
-                <span class="wish-card__number">
-                  02
-                </span>
-
-                <strong>
-                  reader candle
-                </strong>
-
-                <span>
-                  for staying up irresponsibly late
-                </span>
-
-              </button>
-
-
-              <button
-                class="wish-card"
-                type="button"
-                data-wish="a sleeping fox book weight"
-              >
-
-                <span class="wish-card__number">
-                  03
-                </span>
-
-                <strong>
-                  book weight
-                </strong>
-
-                <span>
-                  sleeping fox, obviously
-                </span>
-
-              </button>
-
-            </div>
+            ></div>
 
 
             <form class="wish-form" id="wishForm">
@@ -594,7 +560,7 @@
             >
 
               <span>
-                wish received
+                the table heard you
               </span>
 
               <strong id="wishResultText"></strong>
@@ -609,7 +575,7 @@
 
 
       <!-- =====================================================
-           SAGEWAVE REVEAL
+           Sagewave reveal
            ===================================================== -->
 
       <section class="reveal-section section">
@@ -625,7 +591,7 @@
             <br />
             isn't real.
             <br />
-            <em>The possibility is.</em>
+            <span class="heading-accent">The possibility is.</span>
           </h2>
 
           <p class="reveal-section__body">
@@ -641,8 +607,11 @@
             </span>
 
             <strong>
-              SageWave Web Design
+              Sagewave Web Design
             </strong>
+            <p>
+              <a href="https://www.sagewavewebdesign.com" target="_blank" rel="noopener noreferrer">sagewavewebdesign.com</a>
+            </p>
 
           </div>
 
@@ -659,12 +628,15 @@
 
       <div class="wrap footer__inner">
 
-        <p>
-          Between the Veil
-        </p>
+        <a class="footer__brand" href="#top">
+          <img
+            src="between-the-veil-logo.svg"
+            alt="Between the Veil — an independent bookshop"
+          />
+        </a>
 
         <p>
-          An imaginary bookshop by SageWave Web Design.
+          An imaginary bookshop by Sagewave Web Design.
         </p>
 
         <a href="#top">
